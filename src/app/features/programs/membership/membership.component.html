@@ -1,0 +1,128 @@
+<div class="membership-page-content container">
+  <div class="membership-banner row">
+    <img [src]="program.banner" [alt]="program.title" />
+  </div>
+  <div class="information-content row mt-5">
+    <h4 class="text-center membership-title">{{ program.title }}</h4>
+  </div>
+  <div class="price-information row">
+    <div class="col-12 col-sm-12 col-md-3 mt-3"></div>
+    <div class="col-12 col-sm-12 col-md-6 mt-3 padding-none">
+      <div class="step-wizard">
+        <div class="step step-line done">
+          <div class="step-number bg-auna">1</div>
+          <div class="step-name">Identificación</div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-name">Afiliación</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 mt-3">
+      <div class="price-tag">
+        <div class="price-title">Pago desde</div>
+        <div class="price">
+          <span class="price-symbol">S/</span>
+          <span class="text-highlight entire-price">0</span>
+          <span class="text-highlight decimal-price">.00</span>
+          <div><small>(Incluye IGV)</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="identity-content row">
+    <div class="col-12">
+      <h4>Identifícate con los datos de tu DNI</h4>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="acceptPolicies"
+          name="acceptPolicies"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          <a href="javascript:void(0)"
+            >Acepto las Políticas de privacidad de datos personales</a
+          >
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="additionalPurposes"
+          name="additionalPurposes"
+        />
+        <label class="form-check-label" for="flexCheckChecked">
+          <a href="javascript:void(0)"
+            >Autorizo el uso de mis datos para fines adicionales</a
+          >
+        </label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="acceptPolicies" class="search-information">
+    <div class="row control-group mt-3">
+      <div class="form-group col-12 col-sm-12 col-md-6">
+        <div>
+          <label>Empresa</label>
+        </div>
+        <ng-select2
+          [data]="enterprises"
+          [width]="'resolve'"
+          [(ngModel)]="enterpriseSelected"
+        >
+        </ng-select2>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6"></div>
+    </div>
+    <div class="row control-group mt-3">
+      <div class="col-12 col-sm-12 col-md-6">
+        <div class="row">
+          <div class="form-group col-6">
+            <div>
+              <label for="exampleFormControlSelect1">Documento</label>
+            </div>
+            <ng-select2
+              [data]="documents"
+              [width]="'resolve'"
+              [(ngModel)]="documentSelected"
+            >
+            </ng-select2>
+          </div>
+          <div class="form-group col-6">
+            <label for="exampleFormControlSelect1">Número</label>
+            <input type="text" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6">
+        <button
+          class="btn btn-primary btn-search-info"
+          (click)="onSearchInformation()"
+          type="button"
+        >
+          Buscar
+        </button>
+      </div>
+    </div>
+
+    <div class="row control-group mt-3">
+      <div class="form-group col-12 col-md-3">
+        <label for="exampleFormControlSelect1">Número</label>
+        <input type="text" class="form-control" />
+      </div>
+
+      <div class="form-group col-12 col-md-3">
+        <label for="exampleFormControlSelect1">Número</label>
+        <input type="text" class="form-control" />
+      </div>
+
+      <div class="form-group col-12 col-md-3">
+        <label for="exampleFormControlSelect1">Número</label>
+        <input type="date" class="form-control" />
+      </div>
+    </div>
+  </div>
+</div>

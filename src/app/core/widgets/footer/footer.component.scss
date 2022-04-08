@@ -1,0 +1,25 @@
+@import "../../styles/variables.scss";
+
+.footer-content{
+    margin-top: 30px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    .auna-description{
+        color: $white-color;
+        margin-bottom: 10px;
+    }
+    .border-bottom-footer{
+        border-bottom: 1px solid $white-color;
+    }
+    .footer-bottom{
+        padding-top: 20px;
+        .all-rights-reserved{
+            color: $white-color;
+        }
+        .terms-and-conditions{
+            a{
+                color: $white-color;
+            }
+        }
+    }
+}

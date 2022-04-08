@@ -1,0 +1,129 @@
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/app/auth/services/authentication.service';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
+})
+export class LoginComponent implements OnInit {
+
+  //Public
+  public returnUrl: String;
+  public msgResponse: String;
+  public email: String;
+  public password: String;
+  public passwordType: String;
+  public passwordIcon: String;
+  public errorEmail: Boolean;
+  public errorPassword: Boolean;
+  public fieldsDisabled: boolean;
+
+  /**
+   *
+   * @param {AuthenticationService} _authenticationService
+   * @param {Router} _router
+   * @param {ActivatedRoute} _route
+   */
+  constructor(private _router: Router,
+              private _route: ActivatedRoute, 
+              private _authenticationService: AuthenticationService) {
+    this.returnUrl = "/";
+    this.msgResponse = "";
+    this.email = "";
+    this.password = "";
+    this.passwordType = "password";
+    this.passwordIcon = "fa fa-eye";
+    this.errorEmail = false;
+    this.errorPassword = false;
+    this.fieldsDisabled = false;
+  }
+
+  /**
+   * ngOnInit Method
+   */
+  ngOnInit(): void {
+    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
+    if(this.loginActive){
+      this._router.navigate([this.returnUrl]);      
+    }
+  }
+
+  /**
+   * showPassword Method : Change the field type.
+   */
+  showPassword() {
+    if (this.passwordType === "password") {
+      this.passwordIcon = "fa fa-eye";
+      this.passwordType = "text";
+    } else {
+      this.passwordIcon = "fa fa-eye-slash";
+      this.passwordType = "password";
+    }
+  }
+
+  /**
+   * onLogin Method : Form Submit
+   */
+  onLogin() {
+    if (this.email == "") {
+      this.errorEmail = true;
+      return;
+    }
+
+    if (!this.validateEmail(this.email.toString())) {
+      this.errorEmail = true;
+      return;
+    }
+
+    this.errorEmail = false;
+
+    if (this.password == "") {
+      this.errorPassword = true;
+      return;
+    }
+
+    this.errorPassword = false;
+    this.fieldsDisabled = true;
+
+    var user = this._authenticationService.login(this.email.toString(), this.password.toString());
+
+    if (user != null) {
+      this._router.navigate([this.returnUrl]);
+    } else {
+      this.msgResponse = "Usuario no encontrado.";
+    }
+
+
+  }
+
+  /**
+   * onLogin Method : Form Submit
+   */
+  validateEmail(valor: string) {
+    if (
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(
+        valor
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * get loginActive Method
+   */
+  public get loginActive(): Boolean{
+    if(this._authenticationService.currentUserValue.token){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+}

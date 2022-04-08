@@ -1,0 +1,64 @@
+@import "../../../core/styles/variables.scss";
+
+
+.programs-page-content{
+    .program-banner{
+        img{
+            width: 100%;
+        }
+    }
+    .information-content{
+        margin-top: 40px;
+        margin-bottom: 40px;
+        h4{
+            font-size: 40px;
+            color: $auna-purple-100;
+            span{
+                color: $auna-green-40;            
+            }
+        }
+
+        .specifications-content{
+            margin-bottom: 10px;
+            padding: 15px 0 15px 0;
+            .specifications{
+                .icon-specification{
+                    width: 40px;
+                }
+                .line-height-specification{
+                    line-height: 40px;
+                }
+            }
+            .pl-2{
+                padding-left: 10px;
+            }
+        }
+        .external-link-footer{
+            padding-top: 10px;
+            padding-bottom: 20px;
+            a{
+                color: $auna-purple-100;
+                text-decoration: none;
+                &:hover{
+                    text-decoration: underline;
+                }
+            }
+        }
+        .membership-footer{
+            .btn-membership{
+                border-color: $auna-orange-100;
+                background-color: $auna-orange-100;
+                border-top-right-radius: inherit;
+                border-bottom-left-radius: inherit;
+                font-size: 30px;
+                border-bottom-right-radius: 20px;
+                border-top-left-radius: 20px;
+                color: $white-color;
+            }
+        }
+        .slogan-footer{
+            padding-top: 20px;
+            color: $auna-purple-100;
+        }
+    }
+}

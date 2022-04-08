@@ -1,0 +1,74 @@
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import "./app/core/styles/variables.scss";
+
+html,
+body {
+  font-family: Poppins, sans-serif !important;
+}
+
+.bg-auna-primary {
+    background-color: $primary-color;
+}
+
+.btn-primary-auna{
+    border-radius: 40px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    background-color: $primary-color!important;
+    border-color: $primary-color!important;
+    padding: 14px 15px;
+    color: $white-color;
+    &:hover {
+        color: $white-color;
+    }
+}
+
+
+.programs-content{
+    .owl-carousel{
+        .owl-nav{
+            .owl-prev{
+                background-color: $primary-color;
+                position: absolute!important;
+                top: -40px!important;
+                margin-left: -55px;            
+                width: 50px;
+            
+            }
+            .owl-next{
+                background-color: $primary-color;
+                position: absolute!important;
+                top: -40px!important;
+                width: 50px;
+            
+            }
+        }
+    }
+} 
+
+
+.form-group{
+    .select2-container{
+        width: 100%!important;
+        .select2-selection--single{
+            height: 38px;
+            border: 1px solid #ced4da;
+            .select2-selection__rendered{
+                height: 38px;
+                line-height: 36px;
+            }
+            .select2-selection__arrow{
+                height: 38px;
+                line-height: 36px;
+            }
+        }
+    }
+}
+
+@media (min-width: 1200px){
+    .container {
+        width: 1170px !important;
+    }
+}
