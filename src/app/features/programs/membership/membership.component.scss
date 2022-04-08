@@ -153,12 +153,3 @@
 .optional-text-modifier {
     font-size: 0.8rem;
 }
-.terms-conditions-text {
-    color: $primary-color;
-    text-decoration: none;
-    font-weight: bold;
-    &:hover {
-        color: $auna-grey-90;
-        text-decoration: underline;
-    }
-}
