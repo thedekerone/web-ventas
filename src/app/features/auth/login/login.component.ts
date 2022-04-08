@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/auth/services/authentication.service';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-
+import { Component, OnInit } from "@angular/core";
+import { AuthenticationService } from "src/app/auth/services/authentication.service";
+import { Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
+import { BackOfficeService } from "src/app/services/back-office.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
-
   //Public
-  public returnUrl: String;
-  public msgResponse: String;
-  public email: String;
-  public password: String;
-  public passwordType: String;
-  public passwordIcon: String;
+  public returnUrl: string;
+  public msgResponse: string;
+  public email: string;
+  public password: string;
+  public passwordType: string;
+  public passwordIcon: string;
   public errorEmail: Boolean;
   public errorPassword: Boolean;
   public fieldsDisabled: boolean;
@@ -28,9 +27,12 @@ export class LoginComponent implements OnInit {
    * @param {Router} _router
    * @param {ActivatedRoute} _route
    */
-  constructor(private _router: Router,
-              private _route: ActivatedRoute, 
-              private _authenticationService: AuthenticationService) {
+  constructor(
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _authenticationService: AuthenticationService,
+    private _backOfficeService: BackOfficeService
+  ) {
     this.returnUrl = "/";
     this.msgResponse = "";
     this.email = "";
@@ -46,10 +48,11 @@ export class LoginComponent implements OnInit {
    * ngOnInit Method
    */
   ngOnInit(): void {
-    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
-    if(this.loginActive){
-      this._router.navigate([this.returnUrl]);      
+    this.returnUrl = this._route.snapshot.queryParams["returnUrl"] || "/";
+    if (this.loginActive) {
+      this._router.navigate([this.returnUrl]);
     }
+    this._backOfficeService.getTokenCognito();
   }
 
   /**
@@ -89,15 +92,16 @@ export class LoginComponent implements OnInit {
     this.errorPassword = false;
     this.fieldsDisabled = true;
 
-    var user = this._authenticationService.login(this.email.toString(), this.password.toString());
+    var user = this._authenticationService.login(
+      this.email.toString(),
+      this.password.toString()
+    );
 
     if (user != null) {
       this._router.navigate([this.returnUrl]);
     } else {
       this.msgResponse = "Usuario no encontrado.";
     }
-
-
   }
 
   /**
@@ -118,12 +122,11 @@ export class LoginComponent implements OnInit {
   /**
    * get loginActive Method
    */
-  public get loginActive(): Boolean{
-    if(this._authenticationService.currentUserValue.token){
+  public get loginActive(): Boolean {
+    if (this._authenticationService.currentUserValue.token) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
-
 }
