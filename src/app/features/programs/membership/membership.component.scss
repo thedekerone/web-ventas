@@ -1,74 +1,72 @@
 @import "../../../core/styles/variables.scss";
 
-
-.membership-page-content{
-
-    .btn-primary{
+.membership-page-content {
+    .btn-primary {
         line-height: 20px;
-        background-color: $primary-color!important;
-        border-color: $primary-color!important;
+        background-color: $primary-color !important;
+        border-color: $primary-color !important;
         color: $white-color;
         &:hover {
             color: $white-color;
         }
     }
-    .membership-banner{
-        img{
+    .membership-banner {
+        img {
             width: 100%;
         }
     }
-    .information-content{
-        .membership-title{
+    .information-content {
+        .membership-title {
             color: $primary-color;
             font-size: 30px;
             margin-bottom: 20px;
         }
     }
-    .search-information{
-        .control-group{
-            .btn-search-info{
+    .search-information {
+        .control-group {
+            .btn-search-info {
                 margin-top: 25px;
             }
-            .form-group{
-                .select2-container{
-                    width: 100%!important;
+            .form-group {
+                .select2-container {
+                    width: 100% !important;
                 }
             }
         }
     }
-    .identity-content{
+    .identity-content {
         margin-bottom: 15px;
-        h4{
+        h4 {
             color: $auna-grey-90;
             font-size: 22px;
             padding-left: 0px;
             padding-bottom: 10px;
         }
-        .form-check{
-            .form-check-label{
+        .form-check {
+            .form-check-label {
                 padding-bottom: 10px;
-                a{
+                a {
                     color: $primary-color;
                     text-decoration: none;
-                    &:hover{
+                    &:hover {
                         color: $auna-grey-90;
                         text-decoration: underline;
                     }
                 }
             }
-        } 
+        }
     }
-    .price-information{
-        .padding-none{
+    .price-information {
+        .padding-none {
             padding: 0px;
         }
-        .step-wizard{
+        .step-wizard {
             padding-left: 50px;
             text-align: center;
             max-width: 920px;
             margin: 20px auto 60px;
-            .step-line{
-                &::before{
+            .step-line {
+                &::before {
                     content: "";
                     width: 160px;
                     height: 4px;
@@ -78,21 +76,21 @@
                     top: 30px;
                     left: 40px;
                 }
-                .step-name{
+                .step-name {
                     margin-left: -4px;
                 }
             }
-            .step{
+            .step {
                 width: 90px;
                 display: inline-block;
                 margin-right: 60px;
                 position: relative;
                 z-index: 1;
-                .bg-auna{
-                    background-color: $primary-color!important;
-                    color: $white-color!important;
+                .bg-auna {
+                    background-color: $primary-color !important;
+                    color: $white-color !important;
                 }
-                .step-number{
+                .step-number {
                     background: $white-color;
                     width: 60px;
                     height: 60px;
@@ -103,15 +101,15 @@
                     border: 3px solid $primary-color;
                     font-weight: 700;
                     margin: auto;
-                    color: $primary-color
+                    color: $primary-color;
                 }
                 .step-name {
                     margin-top: 10px;
-                    color: $primary-color
+                    color: $primary-color;
                 }
             }
         }
-        .price-tag{
+        .price-tag {
             border-radius: 5px;
             border: 3px solid $primary-color;
             margin: auto auto 30px;
@@ -120,35 +118,47 @@
             width: 100%;
             font-size: 18px;
             max-width: 240px;
-            .price-title{
+            .price-title {
                 color: $auna-grey-90;
                 font-weight: 400;
                 text-align: center;
                 font-size: 18px;
                 font-weight: 500;
             }
-            .price{
+            .price {
                 color: $auna-grey-90;
                 font-weight: 500;
                 position: relative;
                 margin: auto;
                 display: table;
-                .price-symbol{
+                .price-symbol {
                     position: relative;
                     top: -15px;
                 }
-                .entire-price{
+                .entire-price {
                     font-size: 60px;
                     line-height: 1;
                 }
-                .decimal-price{
+                .decimal-price {
                     position: relative;
                     top: -15px;
                 }
-                .text-highlight{
+                .text-highlight {
                     color: $primary-color;
                 }
             }
         }
+    }
+}
+.optional-text-modifier {
+    font-size: 0.8rem;
+}
+.terms-conditions-text {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: bold;
+    &:hover {
+        color: $auna-grey-90;
+        text-decoration: underline;
     }
 }
