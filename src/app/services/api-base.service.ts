@@ -1,23 +1,22 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { environment } from "src/environments/environment";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ApiBaseService {
-
   protected apiEndpoing: string;
   constructor(
     protected http: HttpClient,
-    protected apiPath: String,
-    protected version: String = 'v1') {
-
+    protected apiPath: string,
+    protected version: string = "v1"
+  ) {
     let baseApiPath = environment.apiUrl;
-    
-    if (location.protocol === 'https:')
-      baseApiPath = baseApiPath.replace('http:', 'https:');
+
+    if (location.protocol === "https:")
+      baseApiPath = baseApiPath.replace("http:", "https:");
 
     this.apiEndpoing = `${baseApiPath}api/${version}/${apiPath}`;
   }
@@ -41,5 +40,4 @@ export class ApiBaseService {
   private getApiFullPath(apiMethodName: string): string {
     return `${this.apiEndpoing}/${apiMethodName}`;
   }
-
 }

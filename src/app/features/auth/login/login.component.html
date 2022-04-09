@@ -1,39 +1,63 @@
 <div class="container ptx-100">
-    <div class="row">
-        <div class="col-12 col-md-6 mx-auto">
-            <div class="row login-header">
-                <div class="col-6 text-start">
-                    <img src="assets/images/logo-auna.png" alt="Logo AUNA">
-                </div>
-                <div class="col-6 text-end">
-                    <img src="assets/images/logo-auna2.png" alt="Logo OncoSalud">
-                </div>
-            </div>
-            <div class="row">
-                <form class="form-login" (submit)="onLogin()">
-                    <div class="form-group">
-                        <label for="name" class="control-label">Correo electrónico</label>
-                        <input type="email" [disabled]="fieldsDisabled" class="form-control" [(ngModel)]="email"
-                            name="email" placeholder="Ingresa tu correo electrónico" />
-                        <span *ngIf="errorEmail" class="text-danger">Por favor ingresa un correo electrónico
-                            válido.</span>
-                    </div>
-                    <div class="form-group mt-4">
-                        <label for="name" class="control-label control-label-auna">Contraseña</label>
-                        <input [type]="passwordType" [disabled]="fieldsDisabled" class="form-control prx-35"
-                            [(ngModel)]="password" name="password" placeholder="Ingresa tu contraseña" />
-                        <span (click)="showPassword()">
-                            <i id="icon-change-password" class="{{passwordIcon}}"></i>
-                        </span>
-                        <span *ngIf="errorPassword" class="text-danger">Esta información es por tu seguridad.</span>
-                    </div>
-                    <div class="form-group text-center">
-                        <button type="submit"  [disabled]="fieldsDisabled" class="btn btn-primary-auna mt-4 w-50">
-                            Ingresar
-                        </button>
-                    </div>
-                </form>
-            </div>
+  <div class="row">
+    <div class="col-12 col-md-6 mx-auto">
+      <div class="row login-header">
+        <div class="col-6 text-start">
+          <img src="assets/images/logo-auna.png" alt="Logo AUNA" />
         </div>
+        <div class="col-6 text-end">
+          <img src="assets/images/logo-auna2.png" alt="Logo OncoSalud" />
+        </div>
+      </div>
+      <div class="row">
+        <form class="form-login" (submit)="onLogin()">
+          <div class="form-group">
+            <label for="name" class="control-label">Correo electrónico</label>
+            <input
+              type="email"
+              [disabled]="fieldsDisabled"
+              class="form-control"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="Ingresa tu correo electrónico"
+            />
+            <span *ngIf="errorEmail" class="text-danger"
+              >Por favor ingresa un correo electrónico válido.</span
+            >
+          </div>
+          <div class="form-group mt-4">
+            <label for="name" class="control-label control-label-auna"
+              >Contraseña</label
+            >
+            <input
+              [type]="passwordType"
+              [disabled]="fieldsDisabled"
+              class="form-control prx-35"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="Ingresa tu contraseña"
+            />
+            <span (click)="showPassword()">
+              <i id="icon-change-password" class="{{ passwordIcon }}"></i>
+            </span>
+            <span *ngIf="errorPassword" class="text-danger"
+              >Esta información es por tu seguridad.</span
+            >
+            <span *ngIf="msgResponse" class="text-danger">{{
+              msgResponse
+            }}</span>
+          </div>
+          <div class="form-group text-center">
+            <button
+              type="submit"
+              [disabled]="fieldsDisabled"
+              class="btn btn-primary-auna mt-4 w-50"
+            >
+              Ingresar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>

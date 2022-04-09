@@ -1,29 +1,26 @@
-<div class="container" >
+<div *ngIf="!loading" class="container">
   <div class="card">
     <div class="card-body">
       <section class="carousel-content">
         <owl-carousel-o [options]="bannerOptions">
           <ng-container *ngFor="let banner of banners">
             <ng-template carouselSlide [id]="banner.id.toString()">
-              <a [routerLink]="banner.link">
-                <img [src]="banner.image" >
-              </a>
+              <img [src]="banner.image" />
             </ng-template>
-          </ng-container>    
+          </ng-container>
         </owl-carousel-o>
       </section>
       <section class="programs-content">
         <div class="row">
           <owl-carousel-o [options]="programsOptions">
-            <ng-container *ngFor="let program of programs">
-              <ng-template carouselSlide [id]="program.id.toString()">
-                <app-program [programNode]="program"></app-program>
+            <ng-container *ngFor="let plan of planes">
+              <ng-template carouselSlide [id]="plan.id.toString()">
+                <app-program [programNode]="plan"></app-program>
               </ng-template>
-            </ng-container>    
+            </ng-container>
           </owl-carousel-o>
         </div>
       </section>
     </div>
   </div>
-
 </div>

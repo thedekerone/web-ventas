@@ -4,7 +4,13 @@
 
 export const environment = {
   production: false,
-  apiUrl: '/BikeWay/'
+  secretKey: "",
+  apiUrl: "/BikeWay/",
+  lambda_cognito:
+    "https://0grqy7x10b.execute-api.us-east-1.amazonaws.com/dev/outh2/token",
+  lambda_auth: "https://0grqy7x10b.execute-api.us-east-1.amazonaws.com/dev",
+  lambda_programs:
+    "https://0grqy7x10b.execute-api.us-east-1.amazonaws.com/dev/list/program",
 };
 
 /*
