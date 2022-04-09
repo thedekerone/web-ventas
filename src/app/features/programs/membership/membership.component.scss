@@ -153,3 +153,24 @@
 .optional-text-modifier {
     font-size: 0.8rem;
 }
+.new-affiliate-container {
+    background-color: #eef7f2;
+    padding: 2em 6em;
+    position: relative;
+    .person-icon {
+        position: absolute;
+        left: 1.3em;
+        top: 4em;
+        fill: black;
+        width: 60px;
+    }
+    .close-icon {
+        position: absolute;
+        right: -15px;
+        top: -15px;
+        width: 50px;
+        height: 50px;
+        fill: $primary-color;
+        cursor: pointer;
+    }
+}
