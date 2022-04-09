@@ -174,3 +174,16 @@
         cursor: pointer;
     }
 }
+.success-form-container {
+    .success-form-container__content {
+        color: #198754;
+        background-color: #def0d8;
+        svg {
+            width: 120px;
+            margin-right: 2em;
+            path {
+                fill: #198754;
+            }
+        }
+    }
+}
