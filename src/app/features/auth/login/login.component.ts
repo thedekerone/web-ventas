@@ -3,6 +3,7 @@ import { AuthenticationService } from "src/app/auth/services/authentication.serv
 import { Router } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
 import { BackOfficeService } from "src/app/services/back-office.service";
+import { User } from "src/app/auth/models/user";
 
 @Component({
   selector: "app-login",
@@ -48,11 +49,12 @@ export class LoginComponent implements OnInit {
    * ngOnInit Method
    */
   ngOnInit(): void {
+    this._authenticationService.logout().subscribe();
     this.returnUrl = this._route.snapshot.queryParams["returnUrl"] || "/";
     if (this.loginActive) {
       this._router.navigate([this.returnUrl]);
     }
-    this._backOfficeService.getTokenCognito();
+    this._authenticationService.getToken().subscribe();
   }
 
   /**
@@ -92,16 +94,17 @@ export class LoginComponent implements OnInit {
     this.errorPassword = false;
     this.fieldsDisabled = true;
 
-    var user = this._authenticationService.login(
-      this.email.toString(),
-      this.password.toString()
-    );
-
-    if (user != null) {
-      this._router.navigate([this.returnUrl]);
-    } else {
-      this.msgResponse = "Usuario no encontrado.";
-    }
+    this._authenticationService
+      .login(this.email.toString(), this.password.toString())
+      .subscribe((res) => {
+        console.log(res);
+        if (res.success) {
+          this._router.navigate([this.returnUrl]);
+        } else {
+          this.msgResponse = "Usuario no encontrado.";
+          this.fieldsDisabled = false;
+        }
+      });
   }
 
   /**
@@ -123,7 +126,7 @@ export class LoginComponent implements OnInit {
    * get loginActive Method
    */
   public get loginActive(): Boolean {
-    if (this._authenticationService.currentUserValue.token) {
+    if (this._authenticationService.currentUserValue.id) {
       return true;
     } else {
       return false;

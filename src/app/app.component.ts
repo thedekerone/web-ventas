@@ -35,7 +35,7 @@ export class AppComponent {
    * get loginActive Method
    */
   public get loginActive(): Boolean {
-    if (this._authenticationService.currentUserValue.token) {
+    if (this._authenticationService.currentUserValue.id) {
       return true;
     } else {
       return false;
@@ -46,6 +46,6 @@ export class AppComponent {
    * get userEmail Method
    */
   public get userEmail(): string {
-    return this._authenticationService.currentUserValue.correo;
+    return this._authenticationService.currentUserValue.username;
   }
 }
