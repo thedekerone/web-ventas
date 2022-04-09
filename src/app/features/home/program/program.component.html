@@ -18,7 +18,10 @@
       </div>
     </div>
     <div class="show-more-button text-center">
-      <button class="btn btn-custom" [routerLink]="programNode.link">
+      <button
+        class="btn btn-custom"
+        [routerLink]="[programNode.link, programNode.id]"
+      >
         Conocer m&aacute;s
       </button>
     </div>

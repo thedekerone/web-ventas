@@ -5,9 +5,7 @@
         <owl-carousel-o [options]="bannerOptions">
           <ng-container *ngFor="let banner of banners">
             <ng-template carouselSlide [id]="banner.id.toString()">
-              <a [routerLink]="banner.link">
-                <img [src]="banner.image" />
-              </a>
+              <img [src]="banner.image" />
             </ng-template>
           </ng-container>
         </owl-carousel-o>
