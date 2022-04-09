@@ -55,18 +55,14 @@ export class BackOfficeService {
       this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
     );
 
-    return this.http.post<UserResponse>(
-      `${environment.lambda_auth}/login`,
-      userRequest,
-      {
-        headers: new HttpHeaders({
-          "Content-Type": "text/plain; charset=utf-8",
-          Authorization:
-            this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2") || "",
-        }),
-        responseType: "text" as "json",
-      }
-    );
+    return this.http.post(`${environment.lambda_auth}/login`, userRequest, {
+      headers: new HttpHeaders({
+        "Content-Type": "text/plain; charset=utf-8",
+        Authorization:
+          this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2") || "",
+      }),
+      responseType: "text" as "json",
+    });
   }
 
   logout() {
@@ -79,7 +75,7 @@ export class BackOfficeService {
 
     return this.http.post<UserResponse>(
       `${environment.lambda_auth}/logout`,
-      userRequest,
+      {},
       {
         headers: new HttpHeaders({
           "Content-Type": "text/plain; charset=utf-8",

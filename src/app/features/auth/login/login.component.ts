@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
    * ngOnInit Method
    */
   ngOnInit(): void {
-    this._authenticationService.logout().subscribe();
+    this._authenticationService.logout().subscribe((res) => console.log(res));
     this.returnUrl = this._route.snapshot.queryParams["returnUrl"] || "/";
     if (this.loginActive) {
       this._router.navigate([this.returnUrl]);
@@ -101,7 +101,7 @@ export class LoginComponent implements OnInit {
         if (res.success) {
           this._router.navigate([this.returnUrl]);
         } else {
-          this.msgResponse = "Usuario no encontrado.";
+          this.msgResponse = res.message;
           this.fieldsDisabled = false;
         }
       });

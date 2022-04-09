@@ -8,7 +8,6 @@ import { BackOfficeService } from "src/app/services/back-office.service";
 import { StorageService } from "src/app/services/storage.service";
 import { Cognito } from "../models/cognito";
 import { SharedService } from "src/app/services/shared.service";
-import { Router } from "@angular/router";
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
@@ -25,7 +24,6 @@ export class AuthenticationService {
    */
   constructor(
     private _backOfficeService: BackOfficeService,
-    private _router: Router,
     private crypto: SharedService,
     private storage: StorageService
   ) {
@@ -38,8 +36,10 @@ export class AuthenticationService {
     };
     this.currentUserSubject = new BehaviorSubject<User>(
       JSON.parse(
-        this.storage.getCookie("zxc21dsrty5uyj11j1") ||
-          JSON.stringify(this.userLogOut)
+        this.crypto.decrypt(
+          this.storage.getCookie("zxc21dsrty5uyj11j1"),
+          this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+        ) || JSON.stringify(this.userLogOut)
       )
     );
     this.currentUser = this.currentUserSubject.asObservable();
@@ -70,7 +70,15 @@ export class AuthenticationService {
    */
   login(login: string, password: string) {
     return this._backOfficeService.login(login, password).pipe(
-      map((user: UserResponse) => {
+      map((res) => {
+        const user = JSON.parse(
+          this.crypto.decrypt(
+            res.toString(),
+            this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+          )
+        );
+        console.log("dadsdasdsadsadasdsads");
+        console.log(user);
         if (user.data && user.data.access_token) {
           const currentUser: User = {
             apellido_materno: user.data.apellido_materno,
@@ -79,6 +87,7 @@ export class AuthenticationService {
             nombre: user.data.nombre_personal,
             id: user.data.id_personal,
           };
+          console.log(user.data);
 
           this.storage.setCookie(
             "1604e4ec4971ff5ace5fa1a099797ffa1",
@@ -91,19 +100,20 @@ export class AuthenticationService {
             1
           );
 
-          this.storage.setCookie("zxc21dsrty5uyj11j1", currentUser, 1);
+          this.storage.setCookie(
+            "zxc21dsrty5uyj11j1",
+            this.crypto.encrypt(
+              JSON.stringify(currentUser),
+              this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+            ),
+            1
+          );
 
           // notify
           this.currentUserSubject.next(currentUser);
-          this._router.navigate(["/programs"]);
         }
 
-        return JSON.parse(
-          this.crypto.decrypt(
-            user.toString(),
-            this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
-          )
-        );
+        return user;
       }),
       catchError((err) => {
         console.log("Error", err);
@@ -159,9 +169,10 @@ export class AuthenticationService {
   logout() {
     // remove user from local storage to log user out
     return this._backOfficeService.logout().pipe(
-      map(() => {
+      map((res) => {
         localStorage.removeItem("currentUser");
         this.storage.deleteAllCookies();
+        return res;
       }),
       catchError((error) => {
         console.log("Caught search error ddd the wrong way!");
