@@ -1,17 +1,26 @@
-<div class="program-item-content ">
-    <div class="program-item">
-        <h4 class="title-program text-center">{{programNode.title}}</h4>
-        <img class="logo-program" [src]="programNode.logo" alt="">
-        <div class="specifications-content">
-            <div class="specifications d-flex mt-3" *ngFor="let specification of programNode.specifications">
-                <div>
-                    <img [src]="specification.icon" class="icon-specification" alt="Icon">
-                </div>
-                <div class="pl-2" [innerHTML]="specification.text"></div>
-            </div>
+<div class="program-item-content">
+  <div class="program-item">
+    <h4 class="title-program text-center">{{ programNode.title }}</h4>
+    <img class="logo-program" [src]="programNode.logo" alt="" />
+    <div class="specifications-content">
+      <div
+        class="specifications d-flex mt-3"
+        *ngFor="let specification of programNode.specifications"
+      >
+        <div>
+          <img
+            [src]="specification.icon"
+            class="icon-specification"
+            alt="Icon"
+          />
         </div>
-        <div class="show-more-button text-center">
-            <button class="btn btn-custom" [routerLink]="programNode.link">Conocer m&aacute;s</button>
-        </div>
+        <div class="pl-2" [innerHTML]="specification.text"></div>
+      </div>
     </div>
+    <div class="show-more-button text-center">
+      <button class="btn btn-custom" [routerLink]="programNode.link">
+        Conocer m&aacute;s
+      </button>
+    </div>
+  </div>
 </div>

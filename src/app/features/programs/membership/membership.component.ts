@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Program } from "src/app/models/home/program";
+import { Plan } from "src/app/models/home/program";
 import { Select2OptionData } from "ng-select2";
 
 @Component({
@@ -9,7 +9,7 @@ import { Select2OptionData } from "ng-select2";
 })
 export class MembershipComponent implements OnInit {
   //Public
-  public program: Program;
+  public plan: Plan;
   public acceptPolicies: Boolean;
   public additionalPurposes: Boolean;
   //Public - Select2 Documents
@@ -24,7 +24,7 @@ export class MembershipComponent implements OnInit {
     this.additionalPurposes = false;
     this.documentSelected = "";
     this.enterpriseSelected = "";
-    this.program = {
+    this.plan = {
       id: 2,
       title: "Programa Dr.AUNA",
       logo: "assets/images/logo-auna.png",

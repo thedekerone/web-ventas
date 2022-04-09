@@ -77,8 +77,6 @@ export class AuthenticationService {
             this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
           )
         );
-        console.log("dadsdasdsadsadasdsads");
-        console.log(user);
         if (user.data && user.data.access_token) {
           const currentUser: User = {
             apellido_materno: user.data.apellido_materno,
@@ -87,7 +85,6 @@ export class AuthenticationService {
             nombre: user.data.nombre_personal,
             id: user.data.id_personal,
           };
-          console.log(user.data);
 
           this.storage.setCookie(
             "1604e4ec4971ff5ace5fa1a099797ffa1",
@@ -170,7 +167,6 @@ export class AuthenticationService {
     // remove user from local storage to log user out
     return this._backOfficeService.logout().pipe(
       map((res) => {
-        localStorage.removeItem("currentUser");
         this.storage.deleteAllCookies();
         return res;
       }),

@@ -1,25 +1,43 @@
 <div class="programs-page-content container">
-    <div class="program-banner row">
-        <img [src]="program.banner" alt="">
+  <div class="program-banner row">
+    <img [src]="plan.banner" alt="" />
+  </div>
+  <div class="information-content row">
+    <h4 class="text-center">
+      ¿Por qué <span>afiliarse</span> al programa {{ plan.title }}?
+    </h4>
+    <div class="specifications-content">
+      <div
+        class="specifications d-flex justify-content-center mt-3"
+        *ngFor="let specification of plan.specifications"
+      >
+        <div>
+          <img
+            [src]="specification.icon"
+            class="icon-specification"
+            alt="Icon"
+          />
+        </div>
+        <div
+          class="pl-2 line-height-specification"
+          [innerHTML]="specification.text"
+        ></div>
+      </div>
     </div>
-    <div class="information-content row">
-        <h4 class="text-center">¿Por qué <span>afiliarse</span> al programa {{program.title}}?</h4>
-        <div class="specifications-content ">
-            <div class="specifications d-flex  justify-content-center mt-3" *ngFor="let specification of program.specifications">
-                <div>
-                    <img [src]="specification.icon" class="icon-specification" alt="Icon">
-                </div>
-                <div class="pl-2 line-height-specification" [innerHTML]="specification.text"></div>
-            </div>
-        </div>
-        <div class="external-link-footer text-center">
-            <a href="javascript:void(0)">Ver m&aacute;s detalle</a>
-        </div>
-        <div class="membership-footer text-center">
-            <button class="btn btn-membership" type="button" routerLink="/programs/membership">¡Afiliate aqui!</button>
-        </div>
-        <div class="slogan-footer text-center">
-            y disfruta lo que tenemos para ti.
-        </div>
+    <div class="external-link-footer text-center">
+      <a href="javascript:void(0)">Ver m&aacute;s detalle</a>
     </div>
+    <div class="membership-footer text-center">
+      <button
+        class="btn btn-membership"
+        type="button"
+        routerLink="/programs/membership"
+      >
+        ¡Afiliate aqui!
+      </button>
+    </div>
+    <div class="slogan-footer text-center">
+      y disfruta lo que tenemos para ti.
+    </div>
+  </div>
 </div>

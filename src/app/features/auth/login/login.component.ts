@@ -97,7 +97,6 @@ export class LoginComponent implements OnInit {
     this._authenticationService
       .login(this.email.toString(), this.password.toString())
       .subscribe((res) => {
-        console.log(res);
         if (res.success) {
           this._router.navigate([this.returnUrl]);
         } else {
