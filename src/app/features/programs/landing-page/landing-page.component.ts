@@ -42,11 +42,11 @@ export class LandingPageComponent implements OnInit {
   getPlan() {
     this.route.params.subscribe((params) => {
       console.log(params);
-      if (!params["id"] || !this.planes[params["id"]]) {
+      if (!params["id"] || !this.planes.find((el) => el.id == params["id"])) {
         this.router.navigate(["/"]);
         return;
       }
-      this.plan = this.planes[params["id"]];
+      this.plan = this.planes.find((el) => el.id == params["id"]);
       console.log(this.plan);
     });
   }

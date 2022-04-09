@@ -9,19 +9,19 @@ import { NgSelect2Module } from "ng-select2";
 
 const routes = [
   {
-    path: ":id",
-    component: LandingPageComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: "Programs",
-    },
-  },
-  {
     path: "membership",
     component: MembershipComponent,
     canActivate: [AuthGuard],
     data: {
       title: "Afiliate",
+    },
+  },
+  {
+    path: ":id",
+    component: LandingPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: "Programs",
     },
   },
 ];
