@@ -5,7 +5,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { CoreModule } from "./core/core.module";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ErrorInterceptor } from "./auth/helpers/error.interceptor";
 import { JwtInterceptor } from "./auth/helpers/jwt.interceptor";
 import { BackOfficeService } from "./services/back-office.service";
@@ -19,6 +19,7 @@ import { BackOfficeService } from "./services/back-office.service";
     BrowserAnimationsModule,
     FormsModule,
     CoreModule,
+    ReactiveFormsModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

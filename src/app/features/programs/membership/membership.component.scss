@@ -1,5 +1,22 @@
 @import "../../../core/styles/variables.scss";
 
+.localidades-select{
+    overflow-y: scroll;
+    max-height: 400px;
+    background-color: white;
+    width: 100%;
+    list-style: none;
+    padding-top: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.108);
+    padding-left: 0;
+    position: absolute;
+    cursor: pointer;
+    li:hover{
+        color:white;
+        background-color: rgb(38, 38, 195);
+    }
+}
+
 .membership-page-content {
     .btn-primary {
         line-height: 20px;

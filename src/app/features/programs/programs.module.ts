@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LandingPageComponent } from "src/app/features/programs/landing-page/landing-page.component";
 import { AuthGuard } from "src/app/auth/helpers/auth.guards";
 import { MembershipComponent } from "./membership/membership.component";
@@ -9,7 +9,7 @@ import { NgSelect2Module } from "ng-select2";
 
 const routes = [
   {
-    path: "membership",
+    path: ":id/membership",
     component: MembershipComponent,
     canActivate: [AuthGuard],
     data: {
@@ -31,6 +31,7 @@ const routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     NgSelect2Module,
     RouterModule.forChild(routes),
   ],
