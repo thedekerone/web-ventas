@@ -11,10 +11,16 @@ import { StorageService } from "src/app/services/storage.service";
 import { SharedService } from "src/app/services/shared.service";
 import { programsService } from "src/app/services/programs.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { throttle } from "rxjs/operators";
 import { fromEvent, interval } from "rxjs";
 import { scan, debounce } from "rxjs/operators";
+import {
+  EmpresaResponse,
+  ListaEmpresaResponse,
+} from "src/app/models/home/empresa";
+import { TarifaResponseData } from "src/app/models/home/tarifas";
+import { ListaParienteResponseData } from "src/app/models/home/pariente";
 @Component({
   selector: "app-membership",
   templateUrl: "./membership.component.html",
@@ -34,6 +40,11 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     specifications: [],
   };
   searched = false;
+  loadingUsuario = false;
+
+  step = 1;
+  acceptPolicies2 = false;
+
   public acceptPolicies: Boolean;
   public additionalPurposes: Boolean;
   //Public - Select2 Documents
@@ -52,9 +63,14 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     icon: string;
     text: string;
   }[] = [];
+  price = 0;
   localidades: { id: string; text: string }[] = [];
   estadoCivil: { id: string; text: string }[];
   afiliado: any;
+  listaEmpresas: EmpresaResponse[] = [];
+  listaTarifas: TarifaResponseData[] = [];
+  parientes: FormArray;
+  listaPariente: { id: string; text: string }[] = [];
   constructor(
     private storage: StorageService,
     private crypto: SharedService,
@@ -78,7 +94,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
 
     this.afiliado = new FormGroup({
       documento: new FormControl(""),
-      tipoDocumento: new FormControl(""),
+      tipoDocumento: new FormControl("1"),
       apellidoPaterno: new FormControl(""),
       apellidoMaterno: new FormControl(""),
       nombres: new FormControl(""),
@@ -89,9 +105,11 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       telefono: new FormControl(""),
       localidad: new FormControl(""),
       direccion: new FormControl(""),
-      estadoFumador: new FormControl(""),
-      estadoEnfermedadOncologica: new FormControl(""),
+      estadoFumador: new FormControl("1"),
+      estadoEnfermedadOncologica: new FormControl("1"),
+      estadoAfiliar: new FormControl("1"),
     });
+    this.parientes = new FormArray([]);
 
     this.documents = [
       { id: "1", text: "DNI" },
@@ -108,52 +126,80 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     this.enterprises = [];
   }
 
-  debounceKeypress(element: HTMLInputElement, callback?: () => void) {
-    if (!element) return;
-
-    const keyup = fromEvent(element, "keyup");
-    const result = keyup.pipe(
-      scan((i) => ++i, 1),
-      debounce((i) => interval(300))
+  cambiarEmpresa(value: string | string[]) {
+    console.log(value);
+    const selected = this.listaEmpresas.find(
+      (el) => el.id_empresa == Number(value)
     );
-    keyup.subscribe((a) => {
-      this.localidadesOpen = false;
-    });
-    result.subscribe((x) => {
-      callback && callback();
-    });
-  }
-
-  buscarLocalidades(search: string = "") {
-    this.programsService.getLocalidad(search).subscribe((res) => {
-      this.localidadesOpen = true;
+    if (!selected) return;
+    this.programsService.getTarifa(selected?.tarifa).subscribe((res) => {
       console.log(res);
-      this.localidades = res.data.map((localidad) => {
-        return {
-          id: localidad.idubigeo + "",
-          text:
-            localidad.departamento +
-            "-" +
-            localidad.provincia +
-            "-" +
-            localidad.distrito,
-        };
-      });
+      if (res.success) {
+        this.listaTarifas = res.data;
+
+        if (this.afiliado.get("fechaNacimiento").value) {
+          this.price =
+            this.getPrice(
+              this.listaTarifas,
+              this.afiliado.get("fechaNacimiento").value
+            ) || 0;
+        }
+      }
     });
   }
 
-  handleFocusLocalidades(status: boolean, event?: any) {
-    this.localidadesOpen = status;
-    if (status && event) {
-      console.log(event);
-      event.stopPropagation();
-    }
+  addPariente() {
+    this.parientes.push(
+      new FormGroup({
+        parentesco: new FormControl(""),
+        documento: new FormControl(""),
+        tipoDocumento: new FormControl("1"),
+        apellidoPaterno: new FormControl(""),
+        apellidoMaterno: new FormControl(""),
+        nombres: new FormControl(""),
+        sexo: new FormControl("1"),
+        fechaNacimiento: new FormControl(""),
+        correo: new FormControl(""),
+        telefono: new FormControl(""),
+        localidad: new FormControl(""),
+        direccion: new FormControl(""),
+        estadoFumador: new FormControl("1"),
+        estadoEnfermedadOncologica: new FormControl("1"),
+        estadoAfiliar: new FormControl("1"),
+      })
+    );
   }
 
-  selectLocalidad(localidad: { id: string; text: string }) {
-    console.log(localidad);
-    this.currentLocalidad = localidad;
-    this.afiliado.get("localidad").setValue(localidad.text);
+  removePariente(index: number) {
+    this.parientes.removeAt(index);
+  }
+
+  getDecimal(value: number) {
+    return (value - Math.trunc(value)) * 100;
+  }
+
+  getTrunc(value: number) {
+    return Math.trunc(value);
+  }
+
+  getPrice(listaTarifas: TarifaResponseData[], date: string) {
+    const birthday = new Date(date);
+    const monthDiff = Date.now() - birthday.getTime();
+
+    const ageDt = new Date(monthDiff);
+
+    const year = ageDt.getUTCFullYear();
+
+    const age = Math.abs(year - 1970);
+    console.log(date);
+    console.log(monthDiff);
+    console.log(ageDt);
+    console.log(year);
+    console.log(age);
+    console.log(listaTarifas);
+    return listaTarifas.find(
+      (el) => Number(el.minimo) <= age && age <= Number(el.maximo)
+    )?.valor;
   }
 
   ngAfterViewInit(): void {
@@ -181,9 +227,85 @@ export class MembershipComponent implements OnInit, AfterViewInit {
               text: empresa.razon_social,
             };
           });
+          this.listaEmpresas = res.data;
         }
       });
     }
+    this.programsService.getListaPariente().subscribe((res) => {
+      if (res) {
+        this.listaPariente = res.data.map((el) => ({
+          id: el.id_parentesco + "",
+          text: el.nombre,
+        }));
+      }
+    });
+    this.afiliado.get("localidad").disable();
+  }
+
+  changeStep(step: number) {
+    this.step = step;
+  }
+
+  changeNacimiento() {
+    if (
+      this.afiliado.get("fechaNacimiento").value &&
+      this.listaTarifas.length > 0
+    ) {
+      this.price =
+        this.getPrice(
+          this.listaTarifas,
+          this.afiliado.get("fechaNacimiento").value
+        ) || 0;
+    }
+  }
+
+  debounceKeypress(element: HTMLInputElement, callback?: () => void) {
+    if (!element) return;
+
+    const keyup = fromEvent(element, "keyup");
+    const result = keyup.pipe(
+      scan((i) => ++i, 1),
+      debounce((i) => interval(300))
+    );
+    // keyup.subscribe((a) => {
+    //   this.localidadesOpen = false;
+    // });
+    result.subscribe((x) => {
+      callback && callback();
+    });
+  }
+
+  buscarLocalidades(search: string = "") {
+    this.programsService.getLocalidad(search).subscribe((res) => {
+      this.localidadesOpen = true;
+      console.log(res);
+      this.localidades = res.data.map((localidad) => {
+        return {
+          id: localidad.idubigeo + "",
+          text:
+            localidad.departamento +
+            ", " +
+            localidad.provincia +
+            ", " +
+            localidad.distrito,
+        };
+      });
+    });
+  }
+
+  handleFocusLocalidades(status: boolean, event?: any) {
+    this.localidadesOpen = status;
+    if (status && event) {
+      console.log(event);
+      event.stopPropagation();
+    }
+  }
+
+  selectLocalidad(localidad: { id: string; text: string }) {
+    console.log(localidad);
+    this.localidadesOpen = false;
+    this.currentLocalidad = localidad;
+    this.afiliado.get("localidad").setValue(localidad.text);
   }
 
   getPlan() {
@@ -244,34 +366,54 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       this.getPlan();
     });
   }
+
   onSearchInformation() {
     console.log(this.documentSelected);
+    this.loadingUsuario = true;
     this.programsService
       .buscarUsuario(
         this.afiliado.get("tipoDocumento").value,
         this.afiliado.get("documento").value
       )
-      .subscribe((res) => {
-        console.log(res);
-        this.searched = true;
-        if (res.success) {
-          this.afiliado
-            .get("apellidoPaterno")
-            .setValue(res.data.apellido_paterno);
-          this.afiliado
-            .get("apellidoMaterno")
-            .setValue(res.data.apellido_materno);
-          this.afiliado.get("nombres").setValue(res.data.nombres_completos);
-          this.afiliado
-            .get("sexo")
-            .setValue(res.data.sexo == "MASCULINO" ? "1" : "2");
-          this.afiliado
-            .get("estadoCivil")
-            .setValue(res.data.estado_civil == "SOLTERO" ? "1" : "2");
-          this.afiliado
-            .get("fechaNacimiento")
-            .setValue(res.data.fecha_nacimiento.split("/").reverse().join("-"));
+      .subscribe(
+        (res) => {
+          console.log(res);
+          this.loadingUsuario = false;
+
+          this.searched = true;
+          if (res.success) {
+            this.afiliado
+              .get("apellidoPaterno")
+              .setValue(res.data.apellido_paterno);
+            this.afiliado
+              .get("apellidoMaterno")
+              .setValue(res.data.apellido_materno);
+            this.afiliado.get("nombres").setValue(res.data.nombres_completos);
+            this.afiliado
+              .get("sexo")
+              .setValue(res.data.sexo == "MASCULINO" ? "1" : "2");
+            this.afiliado
+              .get("estadoCivil")
+              .setValue(res.data.estado_civil == "SOLTERO" ? "1" : "2");
+            this.afiliado
+              .get("fechaNacimiento")
+              .setValue(
+                res.data.fecha_nacimiento.split("/").reverse().join("-")
+              );
+
+            if (this.afiliado.get("fechaNacimiento").value) {
+              this.price =
+                this.getPrice(
+                  this.listaTarifas,
+                  this.afiliado.get("fechaNacimiento").value
+                ) || 0;
+            }
+          }
+        },
+        (error) => {
+          this.loadingUsuario = false;
+          this.searched = true;
         }
-      });
+      );
   }
 }

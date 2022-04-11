@@ -1,5 +1,11 @@
 @import "../../../core/styles/variables.scss";
 
+.busqueda{
+    width: calc(100% - 1.5rem);
+    border: 1px solid rgba(0, 0, 0, 0.108);
+    background-color: white;
+}
+
 .localidades-select{
     overflow-y: scroll;
     max-height: 400px;
@@ -7,13 +13,12 @@
     width: 100%;
     list-style: none;
     padding-top: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.108);
     padding-left: 0;
-    position: absolute;
+    // position: absolute;
     cursor: pointer;
     li:hover{
         color:white;
-        background-color: rgb(38, 38, 195);
+        background-color: #5897fb;
     }
 }
 

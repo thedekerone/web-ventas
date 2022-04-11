@@ -17,6 +17,8 @@ import { ListProgramsResponse } from "../core/types";
 import { ListaEmpresaResponse } from "../models/home/empresa";
 import { Usuario, UsuarioResponse } from "../models/usuario/users";
 import { LocalidadResponse } from "../models/home/localidad";
+import { TarifaResponse } from "../models/home/tarifas";
+import { ListaParienteResponse } from "../models/home/pariente";
 
 @Injectable({
   providedIn: "root",
@@ -32,6 +34,48 @@ export class programsService {
   getPrograms(): Observable<ListProgramsResponse> {
     return this.http
       .get<ListProgramsResponse>(environment.lambda_programs, {
+        headers: new HttpHeaders({
+          "Content-Type": "text/plain; charset=utf-8",
+          Authorization:
+            this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2") || "",
+        }),
+        responseType: "text" as "json",
+      })
+      .pipe(
+        map((res) => {
+          return JSON.parse(
+            this.crypto.decrypt(
+              res.toString(),
+              this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+            )
+          );
+        }),
+        catchError((err: HttpErrorResponse) => {
+          console.log("Error", err);
+          var message = "";
+          if (err.error) {
+            try {
+              var jsonData = JSON.parse(
+                this.crypto.decrypt(
+                  err.error,
+                  this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+                )
+              );
+              // console.log('Data de error recuperada:', jsonData);
+              if (jsonData["message"]) {
+                message = jsonData["message"] as string;
+              }
+            } catch (error) {
+              // console.log('Error al obtener captura de mensaje de error', error);
+            }
+          }
+          throw Error(message);
+        })
+      );
+  }
+  getListaPariente(): Observable<ListaParienteResponse> {
+    return this.http
+      .get<ListaParienteResponse>(environment.apiUrl + "/list/relationship", {
         headers: new HttpHeaders({
           "Content-Type": "text/plain; charset=utf-8",
           Authorization:
@@ -139,6 +183,122 @@ export class programsService {
     return this.http
       .post<LocalidadResponse>(
         `${environment.apiUrl}/list/ubigeo`,
+        userRequest,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "text/plain; charset=utf-8",
+            Authorization:
+              this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2") || "",
+          }),
+
+          responseType: "text" as "json",
+        }
+      )
+      .pipe(
+        map((res) => {
+          return JSON.parse(
+            this.crypto.decrypt(
+              res.toString(),
+              this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+            )
+          );
+        }),
+        catchError((err: HttpErrorResponse) => {
+          console.log("Error", err);
+          var message = "";
+          if (err.error) {
+            try {
+              var jsonData = JSON.parse(
+                this.crypto.decrypt(
+                  err.error,
+                  this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+                )
+              );
+              // console.log('Data de error recuperada:', jsonData);
+              if (jsonData["message"]) {
+                message = jsonData["message"] as string;
+              }
+            } catch (error) {
+              // console.log('Error al obtener captura de mensaje de error', error);
+            }
+          }
+          throw Error(message);
+        })
+      );
+  }
+  getTarifa(tarifa: string): Observable<TarifaResponse> {
+    const params = {
+      tarifa,
+    };
+    console.log(params);
+    console.log(this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2"));
+    var userRequest = this.crypto.encrypt(
+      JSON.stringify(params),
+      this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+    );
+
+    return this.http
+      .post<TarifaResponse>(`${environment.apiUrl}/list/tariff`, userRequest, {
+        headers: new HttpHeaders({
+          "Content-Type": "text/plain; charset=utf-8",
+          Authorization:
+            this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2") || "",
+        }),
+
+        responseType: "text" as "json",
+      })
+      .pipe(
+        map((res) => {
+          return JSON.parse(
+            this.crypto.decrypt(
+              res.toString(),
+              this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+            )
+          );
+        }),
+        catchError((err: HttpErrorResponse) => {
+          console.log("Error", err);
+          var message = "";
+          if (err.error) {
+            try {
+              var jsonData = JSON.parse(
+                this.crypto.decrypt(
+                  err.error,
+                  this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+                )
+              );
+              // console.log('Data de error recuperada:', jsonData);
+              if (jsonData["message"]) {
+                message = jsonData["message"] as string;
+              }
+            } catch (error) {
+              // console.log('Error al obtener captura de mensaje de error', error);
+            }
+          }
+          throw Error(message);
+        })
+      );
+  }
+  searchEmpresa(
+    ruc: string,
+    usuario: string,
+    aux: string
+  ): Observable<TarifaResponse> {
+    const params = {
+      ruc,
+      usuario,
+      aux,
+    };
+    console.log(params);
+    console.log(this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2"));
+    var userRequest = this.crypto.encrypt(
+      JSON.stringify(params),
+      this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+    );
+
+    return this.http
+      .post<TarifaResponse>(
+        `${environment.apiUrl}/search/business`,
         userRequest,
         {
           headers: new HttpHeaders({

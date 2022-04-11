@@ -4,7 +4,7 @@ export interface ListaEmpresaResponse {
   data: EmpresaResponse[];
 }
 
-interface EmpresaResponse {
+export interface EmpresaResponse {
   id_empresa: number;
   ruc: string;
   razon_social: string;
