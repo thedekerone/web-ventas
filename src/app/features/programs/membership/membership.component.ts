@@ -11,7 +11,7 @@ import { StorageService } from "src/app/services/storage.service";
 import { SharedService } from "src/app/services/shared.service";
 import { programsService } from "src/app/services/programs.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { throttle } from "rxjs/operators";
 import { fromEvent, interval } from "rxjs";
 import { scan, debounce } from "rxjs/operators";
@@ -93,19 +93,19 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     this.enterpriseSelected = "";
 
     this.afiliado = new FormGroup({
-      documento: new FormControl(""),
+      documento: new FormControl("", [Validators.required]),
       tipoDocumento: new FormControl("1"),
-      apellidoPaterno: new FormControl(""),
+      apellidoPaterno: new FormControl("", [Validators.required]),
       apellidoMaterno: new FormControl(""),
-      nombres: new FormControl(""),
-      sexo: new FormControl("1"),
-      estadoCivil: new FormControl(""),
-      fechaNacimiento: new FormControl(""),
-      correo: new FormControl(""),
-      telefono: new FormControl(""),
+      nombres: new FormControl("", [Validators.required]),
+      sexo: new FormControl("1", [Validators.required]),
+      estadoCivil: new FormControl("", [Validators.required]),
+      fechaNacimiento: new FormControl("", [Validators.required]),
+      correo: new FormControl("", [Validators.required]),
+      telefono: new FormControl("", [Validators.required]),
       localidadId: new FormControl(""),
       localidad: new FormControl(""),
-      direccion: new FormControl(""),
+      direccion: new FormControl("", [Validators.required]),
       estadoFumador: new FormControl("1"),
       estadoEnfermedadOncologica: new FormControl("1"),
       estadoAfiliar: new FormControl("1"),
@@ -149,6 +149,13 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     });
   }
 
+  continuar() {
+    if (this.afiliado.invalid) return;
+    if (this.afiliado.get("estadoAfiliar").value == 1) {
+      this.changeStep(2);
+    }
+  }
+
   addPariente() {
     this.parientes.push(
       new FormGroup({
@@ -173,6 +180,14 @@ export class MembershipComponent implements OnInit, AfterViewInit {
 
   removePariente(index: number) {
     this.parientes.removeAt(index);
+    if (!this.parientes.controls[index].get("fechaNacimiento")) return;
+    const newPrice = this.getPrice(
+      this.listaTarifas,
+      this.parientes.controls[index].get("fechaNacimiento").value
+    );
+    if (newPrice) {
+      this.price -= newPrice;
+    }
   }
 
   getDecimal(value: number) {
@@ -258,6 +273,15 @@ export class MembershipComponent implements OnInit, AfterViewInit {
           this.afiliado.get("fechaNacimiento").value
         ) || 0;
     }
+    this.parientes.controls.map((el: any) => {
+      if (el.get("fechaNacimiento").value && this.listaTarifas.length > 0) {
+        this.price +=
+          this.getPrice(
+            this.listaTarifas,
+            this.afiliado.get("fechaNacimiento").value
+          ) || 0;
+      }
+    });
   }
 
   debounceKeypress(element: HTMLInputElement, callback?: () => void) {

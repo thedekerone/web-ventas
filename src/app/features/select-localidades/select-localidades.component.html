@@ -24,7 +24,13 @@
     </div>
     <!-- [formControl]="afiliado.get('localidad')" -->
     <ul class="mb-0 localidades-select">
-      <li class="text-center" *ngIf="localidades.length == 0">Buscando...</li>
+      <li class="text-center" *ngIf="localidades.length == 0">
+        {{
+          localidadesInput.value.length > 2
+            ? "Buscando..."
+            : "minimo tres letras"
+        }}
+      </li>
       <li
         (click)="selectLocalidad(localidad, $event)"
         class="py-2 px-2"
