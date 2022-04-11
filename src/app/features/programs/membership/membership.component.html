@@ -231,45 +231,13 @@
           </div>
         </div>
         <div class="row control-group mt-3">
-          <div
-            (click)="handleFocusLocalidades(true, $event)"
-            class="form-group position-relative col-12 col-sm-12 col-md-6 mt-3 mt-md-0"
-          >
-            <div>
-              <label>Localidad</label>
-            </div>
-
-            <input
-              [formControl]="afiliado.get('localidad')"
-              class="bg-white form-control"
-            />
-            <div
-              [ngStyle]="{ display: localidadesOpen ? 'block' : 'none' }"
-              (click)="handleFocusLocalidades(true, $event)"
-              class="busqueda position-absolute"
-            >
-              <div class="p-1">
-                <input
-                  #localidadesInput
-                  placeholder="Buscar localidad"
-                  class="form-control"
-                />
-              </div>
-              <!-- [formControl]="afiliado.get('localidad')" -->
-              <ul class="mb-0 localidades-select">
-                <li class="text-center" *ngIf="localidades.length == 0">
-                  Buscando...
-                </li>
-                <li
-                  (click)="selectLocalidad(localidad)"
-                  class="py-2 px-2"
-                  *ngFor="let localidad of localidades"
-                >
-                  {{ localidad.text }}
-                </li>
-              </ul>
-            </div>
+          <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
+            <app-select-localidades
+              [currentLocalidad]="afiliado.get('localidadId')"
+              [control]="afiliado.get('localidad')"
+            ></app-select-localidades>
           </div>
+
           <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
             <div>
               <label>Direccion</label>
@@ -524,7 +492,12 @@
         <div>
           <label for="exampleFormControlSelect1">Parentesco</label>
         </div>
-        <ng-select2 [data]="listaPariente" [width]="'resolve'"> </ng-select2>
+        <ng-select2
+          [formControl]="pariente.get('parentesco')"
+          [data]="listaPariente"
+          [width]="'resolve'"
+        >
+        </ng-select2>
       </div>
 
       <div class="form-group col-6 col-md-3">
@@ -533,19 +506,27 @@
         </div>
         <ng-select2
           [data]="documents"
+          [formControl]="pariente.get('tipoDocumento')"
           [width]="'resolve'"
-          [(ngModel)]="documentSelected"
         >
         </ng-select2>
       </div>
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
         <label for="exampleFormControlSelect1">Numero</label>
-        <input type="tel" class="form-control" />
+        <input
+          [formControl]="pariente.get('documento')"
+          type="tel"
+          class="form-control"
+        />
       </div>
     </div>
     <div class="row control-group mt-3">
       <div class="form-group col-6 col-md-3">
-        <label for="exampleFormControlSelect1">Apellido Paterno</label>
+        <label
+          [formControl]="pariente.get('apellidoPaterno')"
+          for="exampleFormControlSelect1"
+          >Apellido Paterno</label
+        >
         <input type="text" class="form-control" />
       </div>
 
@@ -554,24 +535,33 @@
           >Apellido Materno
           <span class="optional-text-modifier">(opcional)</span></label
         >
-        <input type="text" class="form-control" />
+        <input
+          [formControl]="pariente.get('apellidoMaterno')"
+          type="text"
+          class="form-control"
+        />
       </div>
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
         <label for="exampleFormControlSelect1">Nombres</label>
-        <input type="text" class="form-control" />
+        <input
+          [formControl]="pariente.get('nombres')"
+          type="text"
+          class="form-control"
+        />
       </div>
       <div
         class="form-group col-12 col-md-3 d-flex flex-column justify-content-center mt-3"
       >
-        <label for="inlineRadioOptions">Sexo</label>
+        <label for="sexo{{ i }}">Sexo</label>
         <div>
           <div class="form-check form-check-inline">
             <input
               class="form-check-input"
               type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio1"
-              value="option1"
+              name="sexo{{ i }}"
+              id="1"
+              [formControl]="pariente.get('sexo')"
+              value="1"
             />
             <label class="form-check-label" for="inlineRadio1">M</label>
           </div>
@@ -579,9 +569,10 @@
             <input
               class="form-check-input"
               type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio2"
-              value="option2"
+              name="sexo{{ i }}"
+              id="2"
+              [formControl]="pariente.get('sexo')"
+              value="2"
             />
             <label class="form-check-label" for="inlineRadio2">F</label>
           </div>
@@ -591,51 +582,61 @@
     <div class="row control-group mt-3">
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
         <label for="exampleFormControlSelect1">Fecha de Nacimiento</label>
-        <input type="date" class="form-control" />
+        <input
+          [formControl]="pariente.get('fechaNacimiento')"
+          type="date"
+          class="form-control"
+        />
       </div>
       <div class="form-group col-12 col-md-6 mt-3 mt-md-0">
         <label for="exampleFormControlSelect1">Correo Electronico</label>
-        <input type="email" class="form-control" />
+        <input
+          [formControl]="pariente.get('email')"
+          type="email"
+          class="form-control"
+        />
       </div>
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
         <label for="exampleFormControlSelect1">Telefono Celular</label>
-        <input type="tel" class="form-control" />
+        <input
+          [formControl]="pariente.get('telefono')"
+          type="tel"
+          class="form-control"
+        />
       </div>
     </div>
     <div class="row control-group mt-3">
       <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
-        <div>
-          <label>Localidad</label>
-        </div>
-        <ng-select2
-          [data]="enterprises"
-          [width]="'resolve'"
-          [(ngModel)]="enterpriseSelected"
-        >
-        </ng-select2>
+        <app-select-localidades
+          [currentLocalidad]="pariente.get('localidadId')"
+          [control]="pariente.get('localidad')"
+        ></app-select-localidades>
       </div>
       <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
         <div>
           <label>Direccion</label>
         </div>
-        <input type="text" class="form-control" />
+        <input
+          [formControl]="pariente.get('direccion')"
+          type="text"
+          class="form-control"
+        />
       </div>
     </div>
     <div class="row control-group mt-3">
       <div
         class="form-group col-12 col-md-12 d-flex flex-column justify-content-center"
       >
-        <label for="inlineRadioOptions"
-          >¿Cual es su condición de fumador?</label
-        >
+        <label for="fumo{{ i }}">¿Cual es su condición de fumador?</label>
         <div>
           <div class="form-check form-check-inline">
             <input
               class="form-check-input"
               type="radio"
-              name="inlineRadioOptions"
+              [formControl]="pariente.get('estadoFumador')"
+              name="fumo{{ i }}"
               id="inlineRadio1"
-              value="option1"
+              value="1"
             />
             <label class="form-check-label" for="inlineRadio1">No fumo</label>
           </div>
@@ -643,9 +644,10 @@
             <input
               class="form-check-input"
               type="radio"
-              name="inlineRadioOptions"
+              name="fumo{{ i }}"
+              [formControl]="pariente.get('estadoFumador')"
               id="inlineRadio2"
-              value="option2"
+              value="2"
             />
             <label class="form-check-label" for="inlineRadio2">Sí, fumo</label>
           </div>
@@ -656,7 +658,7 @@
       <div
         class="form-group col-12 col-md-12 d-flex flex-column justify-content-center"
       >
-        <label for="inlineRadioOptions"
+        <label for="oncologica"
           >¿Tiene, ha tenido o está siendo estudiado por alguna enfermedad
           oncológica?</label
         >
@@ -665,9 +667,10 @@
             <input
               class="form-check-input"
               type="radio"
-              name="inlineRadioOptions"
+              name="oncologica{{ i }}"
+              [formControl]="pariente.get('estadoEnfermedadOncologica')"
               id="inlineRadio1"
-              value="option1"
+              value="1"
             />
             <label class="form-check-label" for="inlineRadio1">Si</label>
           </div>
@@ -675,9 +678,10 @@
             <input
               class="form-check-input"
               type="radio"
-              name="inlineRadioOptions"
+              [formControl]="pariente.get('estadoEnfermedadOncologica')"
+              name="oncologica{{ i }}"
               id="inlineRadio2"
-              value="option2"
+              value="2"
             />
             <label class="form-check-label" for="inlineRadio2">No</label>
           </div>

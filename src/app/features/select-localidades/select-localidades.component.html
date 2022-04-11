@@ -1,0 +1,37 @@
+<div
+  (click)="handleFocus(true, $event)"
+  class="form-group position-relative col-12 col-sm-12 col-md-12 mt-md-0"
+>
+  <div>
+    <label>Localidad</label>
+  </div>
+
+  <input
+    [formControl]="control"
+    style="cursor: pointer"
+    class="bg-white form-control"
+  />
+  <div
+    [ngStyle]="{ display: isOpen ? 'block' : 'none' }"
+    class="busqueda position-absolute"
+  >
+    <div class="p-1">
+      <input
+        #localidadesInput
+        placeholder="Buscar localidad"
+        class="form-control"
+      />
+    </div>
+    <!-- [formControl]="afiliado.get('localidad')" -->
+    <ul class="mb-0 localidades-select">
+      <li class="text-center" *ngIf="localidades.length == 0">Buscando...</li>
+      <li
+        (click)="selectLocalidad(localidad, $event)"
+        class="py-2 px-2"
+        *ngFor="let localidad of localidades"
+      >
+        {{ localidad.text }}
+      </li>
+    </ul>
+  </div>
+</div>

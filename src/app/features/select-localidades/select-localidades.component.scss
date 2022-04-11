@@ -1,0 +1,25 @@
+.busqueda{
+    width: calc(100% );
+    border: 1px solid rgba(0, 0, 0, 0.108);
+    background-color: white;
+}
+
+.form-group{
+    z-index: 100;
+}
+
+.localidades-select{
+    overflow-y: scroll;
+    max-height: 400px;
+    background-color: white;
+    width: 100%;
+    list-style: none;
+    padding-top: 10px;
+    padding-left: 0;
+    // position: absolute;
+    cursor: pointer;
+    li:hover{
+        color:white;
+        background-color: #5897fb;
+    }
+}

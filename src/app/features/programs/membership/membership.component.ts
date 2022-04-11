@@ -54,7 +54,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   public enterprises: Array<Select2OptionData>;
   public enterpriseSelected: string;
   localidadesOpen = false;
-  currentLocalidad = { id: "", text: "" };
+  parienteLocalidad = {};
   planes: Plan[];
   public banners: {
     id: number;
@@ -69,7 +69,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   afiliado: any;
   listaEmpresas: EmpresaResponse[] = [];
   listaTarifas: TarifaResponseData[] = [];
-  parientes: FormArray;
+  parientes: any;
   listaPariente: { id: string; text: string }[] = [];
   constructor(
     private storage: StorageService,
@@ -103,6 +103,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       fechaNacimiento: new FormControl(""),
       correo: new FormControl(""),
       telefono: new FormControl(""),
+      localidadId: new FormControl(""),
       localidad: new FormControl(""),
       direccion: new FormControl(""),
       estadoFumador: new FormControl("1"),
@@ -151,7 +152,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   addPariente() {
     this.parientes.push(
       new FormGroup({
-        parentesco: new FormControl(""),
+        parentesco: new FormControl("1"),
         documento: new FormControl(""),
         tipoDocumento: new FormControl("1"),
         apellidoPaterno: new FormControl(""),
@@ -162,10 +163,10 @@ export class MembershipComponent implements OnInit, AfterViewInit {
         correo: new FormControl(""),
         telefono: new FormControl(""),
         localidad: new FormControl(""),
+        localidadId: new FormControl(""),
         direccion: new FormControl(""),
         estadoFumador: new FormControl("1"),
         estadoEnfermedadOncologica: new FormControl("1"),
-        estadoAfiliar: new FormControl("1"),
       })
     );
   }
@@ -299,13 +300,6 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       console.log(event);
       event.stopPropagation();
     }
-  }
-
-  selectLocalidad(localidad: { id: string; text: string }) {
-    console.log(localidad);
-    this.localidadesOpen = false;
-    this.currentLocalidad = localidad;
-    this.afiliado.get("localidad").setValue(localidad.text);
   }
 
   getPlan() {
