@@ -91,8 +91,6 @@ export class HomeComponent implements OnInit {
     this.programsService
       .getPrograms()
       .subscribe((res: ListProgramsResponse) => {
-        console.log("res");
-        console.log(res);
         if (res.success) {
           this.banners = res.data.map((el) => {
             return {

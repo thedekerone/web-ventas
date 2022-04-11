@@ -36,23 +36,19 @@ export class LandingPageComponent implements OnInit {
           )
         )
       : [];
-    console.log(this.planes);
   }
 
   getPlan() {
     this.route.params.subscribe((params) => {
-      console.log(params);
       if (!params["id"] || !this.planes.find((el) => el.id == params["id"])) {
         this.router.navigate(["/"]);
         return;
       }
       this.plan = this.planes.find((el) => el.id == params["id"]);
-      console.log(this.plan);
     });
   }
 
   ngOnInit(): void {
-    console.log("dsaddsa");
     if (this.planes.length == 0) {
       this.getPlanes();
       return;

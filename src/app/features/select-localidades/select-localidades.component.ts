@@ -35,7 +35,6 @@ export class SelectLocalidadesComponent implements OnInit, AfterViewInit {
   buscarLocalidades(search: string = "") {
     this.programsService.getLocalidad(search).subscribe((res) => {
       this.isOpen = true;
-      console.log(res);
       this.localidades = res.data.map((localidad) => {
         return {
           id: localidad.idubigeo + "",
@@ -53,13 +52,11 @@ export class SelectLocalidadesComponent implements OnInit, AfterViewInit {
   handleFocus(status: boolean, event?: any) {
     this.isOpen = status;
     if (status && event) {
-      console.log(event);
       event.stopPropagation();
     }
   }
 
   selectLocalidad(localidad: { id: string; text: string }, event: any) {
-    console.log(localidad);
     this.currentLocalidad.setValue(localidad.id);
     this.isOpen = false;
     this.control.setValue(localidad.text);
@@ -81,7 +78,6 @@ export class SelectLocalidadesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log("this.localidadesInput");
     if (this.localidadesInput) {
       this.debounceKeypress(this.localidadesInput.nativeElement, () => {
         this.buscarLocalidades(this.localidadesInput?.nativeElement.value);

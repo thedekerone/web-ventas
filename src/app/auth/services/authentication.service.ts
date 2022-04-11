@@ -113,7 +113,6 @@ export class AuthenticationService {
         return user;
       }),
       catchError((err) => {
-        console.log("Error", err);
         var message = "";
         if (err.error) {
           try {
@@ -123,13 +122,10 @@ export class AuthenticationService {
                 this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
               )
             );
-            // console.log('Data de error recuperada:', jsonData);
             if (jsonData["message"]) {
               message = jsonData["message"] as string;
             }
-          } catch (error) {
-            console.log("Error al obtener captura de mensaje de error", error);
-          }
+          } catch (error) {}
         }
         throw Error(message);
       })
@@ -152,8 +148,6 @@ export class AuthenticationService {
         return cognito;
       }),
       catchError((error) => {
-        console.log("Caught search error the wrong way!");
-        console.log(error);
         return of(null);
       })
     );
@@ -171,8 +165,6 @@ export class AuthenticationService {
         return res;
       }),
       catchError((error) => {
-        console.log("Caught search error ddd the wrong way!");
-        console.log(error);
         return of(null);
       })
     );

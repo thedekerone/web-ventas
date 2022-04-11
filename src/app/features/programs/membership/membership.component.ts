@@ -105,6 +105,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       telefono: new FormControl("", [Validators.required]),
       localidadId: new FormControl(""),
       localidad: new FormControl(""),
+      nacionalidad: new FormControl(""),
       direccion: new FormControl("", [Validators.required]),
       estadoFumador: new FormControl("1"),
       estadoEnfermedadOncologica: new FormControl("1"),
@@ -128,13 +129,11 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   }
 
   cambiarEmpresa(value: string | string[]) {
-    console.log(value);
     const selected = this.listaEmpresas.find(
       (el) => el.id_empresa == Number(value)
     );
     if (!selected) return;
     this.programsService.getTarifa(selected?.tarifa).subscribe((res) => {
-      console.log(res);
       if (res.success) {
         this.listaTarifas = res.data;
 
@@ -171,6 +170,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
         telefono: new FormControl(""),
         localidad: new FormControl(""),
         localidadId: new FormControl(""),
+        nacionalidad: new FormControl(""),
         direccion: new FormControl(""),
         estadoFumador: new FormControl("1"),
         estadoEnfermedadOncologica: new FormControl("1"),
@@ -207,19 +207,13 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     const year = ageDt.getUTCFullYear();
 
     const age = Math.abs(year - 1970);
-    console.log(date);
-    console.log(monthDiff);
-    console.log(ageDt);
-    console.log(year);
-    console.log(age);
-    console.log(listaTarifas);
+
     return listaTarifas.find(
       (el) => Number(el.minimo) <= age && age <= Number(el.maximo)
     )?.valor;
   }
 
   ngAfterViewInit(): void {
-    console.log("this.localidadesInput");
     if (this.localidadesInput) {
       this.debounceKeypress(this.localidadesInput.nativeElement, () => {
         this.buscarLocalidades(this.localidadesInput?.nativeElement.value);
@@ -228,6 +222,9 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.programsService.getNacionalidades().subscribe((res) => {
+      console.log(res);
+    });
     if (this.planes.length == 0) {
       this.getPlanes();
       return;
@@ -235,7 +232,6 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     this.getPlan();
     if (this.plan) {
       this.programsService.getEmpresas(this.plan.id).subscribe((res) => {
-        console.log(res);
         if (res.success) {
           this.enterprises = res.data.map((empresa) => {
             return {
@@ -303,7 +299,6 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   buscarLocalidades(search: string = "") {
     this.programsService.getLocalidad(search).subscribe((res) => {
       this.localidadesOpen = true;
-      console.log(res);
       this.localidades = res.data.map((localidad) => {
         return {
           id: localidad.idubigeo + "",
@@ -321,14 +316,12 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   handleFocusLocalidades(status: boolean, event?: any) {
     this.localidadesOpen = status;
     if (status && event) {
-      console.log(event);
       event.stopPropagation();
     }
   }
 
   getPlan() {
     this.route.params.subscribe((params) => {
-      console.log(params);
       if (!params["id"] || !this.planes.find((el) => el.id == params["id"])) {
         this.router.navigate(["/"]);
         return;
@@ -338,7 +331,6 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       if (currentPlan) {
         this.plan = currentPlan;
       }
-      console.log(this.plan);
     });
   }
 
@@ -386,7 +378,6 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   }
 
   onSearchInformation() {
-    console.log(this.documentSelected);
     this.loadingUsuario = true;
     this.programsService
       .buscarUsuario(
@@ -395,7 +386,6 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       )
       .subscribe(
         (res) => {
-          console.log(res);
           this.loadingUsuario = false;
 
           this.searched = true;
