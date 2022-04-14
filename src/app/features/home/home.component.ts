@@ -92,6 +92,7 @@ export class HomeComponent implements OnInit {
       .getPrograms()
       .subscribe((res: ListProgramsResponse) => {
         if (res.success) {
+          console.log(res);
           this.banners = res.data.map((el) => {
             return {
               id: el.id_programa,
@@ -102,14 +103,15 @@ export class HomeComponent implements OnInit {
             };
           });
           this.planes = res.data
-            .flatMap((el) => el.plan)
+            .flatMap((el) =>
+              el.plan.map((plan) => ({ ...plan, image: el.icon }))
+            )
             .map((el) => {
+              console.log(el);
               return {
                 id: el.id_plan,
                 link: "/programs",
-                logo:
-                  this.banners.find((banner) => banner.id == el.id_programa)
-                    ?.icon ?? "",
+                logo: el.image,
                 title: el.nombre_plan,
                 banner: el.slider,
                 specifications: el.plan_detalle.map((detalle) => {

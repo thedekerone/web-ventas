@@ -236,13 +236,12 @@
               <label>Nacionalidad</label>
             </div>
             <ng-select2
-              [data]="enterprises"
+              [data]="nacionalidades"
               [width]="'resolve'"
               [formControl]="afiliado.get('nacionalidad')"
             >
             </ng-select2>
           </div>
-          <div class="col-12 col-sm-12 col-md-6"></div>
           <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
             <app-select-localidades
               [currentLocalidad]="afiliado.get('localidadId')"
@@ -625,7 +624,7 @@
           <label>Nacionalidad</label>
         </div>
         <ng-select2
-          [data]="enterprises"
+          [data]="nacionalidades"
           [width]="'resolve'"
           [formControl]="pariente.get('nacionalidad')"
         >

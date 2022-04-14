@@ -71,6 +71,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   listaTarifas: TarifaResponseData[] = [];
   parientes: any;
   listaPariente: { id: string; text: string }[] = [];
+  nacionalidades: { id: string; text: string }[] = [];
   constructor(
     private storage: StorageService,
     private crypto: SharedService,
@@ -133,19 +134,21 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       (el) => el.id_empresa == Number(value)
     );
     if (!selected) return;
-    this.programsService.getTarifa(selected?.tarifa).subscribe((res) => {
-      if (res.success) {
-        this.listaTarifas = res.data;
+    this.programsService
+      .getTarifa(selected?.tarifa, this.plan.id)
+      .subscribe((res) => {
+        if (res.success) {
+          this.listaTarifas = res.data;
 
-        if (this.afiliado.get("fechaNacimiento").value) {
-          this.price =
-            this.getPrice(
-              this.listaTarifas,
-              this.afiliado.get("fechaNacimiento").value
-            ) || 0;
+          if (this.afiliado.get("fechaNacimiento").value) {
+            this.price =
+              this.getPrice(
+                this.listaTarifas,
+                this.afiliado.get("fechaNacimiento").value
+              ) || 0;
+          }
         }
-      }
-    });
+      });
   }
 
   continuar() {
@@ -224,6 +227,10 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.programsService.getNacionalidades().subscribe((res) => {
       console.log(res);
+      this.nacionalidades = res.data.map((nacionalidad) => ({
+        id: nacionalidad.id_nacionalidad + "",
+        text: nacionalidad.pais,
+      }));
     });
     if (this.planes.length == 0) {
       this.getPlanes();

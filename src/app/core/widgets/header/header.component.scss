@@ -3,3 +3,10 @@
 .header-content{
     margin-bottom: 30px;
 }
+
+.logout{
+    cursor: pointer;
+    &:hover{
+        text-decoration: underline;
+    }
+}

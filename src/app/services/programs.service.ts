@@ -19,6 +19,7 @@ import { Usuario, UsuarioResponse } from "../models/usuario/users";
 import { LocalidadResponse } from "../models/home/localidad";
 import { TarifaResponse } from "../models/home/tarifas";
 import { ListaParienteResponse } from "../models/home/pariente";
+import { NacionalidadResponse } from "../models/home/nacionalidad";
 
 @Injectable({
   providedIn: "root",
@@ -71,7 +72,7 @@ export class programsService {
         })
       );
   }
-  getNacionalidades(): Observable<ListProgramsResponse> {
+  getNacionalidades(): Observable<NacionalidadResponse> {
     return this.http
       .get<ListProgramsResponse>(environment.apiUrl + "/list/nationality", {
         headers: new HttpHeaders({
@@ -258,9 +259,10 @@ export class programsService {
         })
       );
   }
-  getTarifa(tarifa: string): Observable<TarifaResponse> {
+  getTarifa(tarifa: string, id_plan: number): Observable<TarifaResponse> {
     const params = {
       tarifa,
+      id_plan,
     };
     var userRequest = this.crypto.encrypt(
       JSON.stringify(params),
