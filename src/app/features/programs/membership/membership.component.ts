@@ -102,7 +102,10 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       sexo: new FormControl("1", [Validators.required]),
       estadoCivil: new FormControl("", [Validators.required]),
       fechaNacimiento: new FormControl("", [Validators.required]),
-      correo: new FormControl("", [Validators.required]),
+      correo: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZñÑÀ-ÿ#.,&@0-9-_ ]*$"),
+      ]),
       telefono: new FormControl("", [Validators.required]),
       localidadId: new FormControl(""),
       localidad: new FormControl(""),
@@ -189,18 +192,32 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       console.log("Dasds2");
       if (!this.acceptPolicies2) return;
       console.log("Dasds3");
-      this.programsService.registrarReserva().subscribe((res) => {
-        if (res.success) {
-          this.programsService
-            .registrarAfiliado(this.getAfiliadoParams(this.afiliado))
-            .subscribe((res) => {
-              console.log(res);
-              if (res.success && hasAfiliados) {
-                this.registrarParientes(res);
-              }
+
+      this.programsService
+        .registrarAfiliado(this.getAfiliadoParams(this.afiliado))
+        .subscribe((afiliado) => {
+          console.log(afiliado);
+
+          if (afiliado.success) {
+            this.programsService.registrarReserva().subscribe((reserva) => {
+              console.log(reserva);
+
+              this.programsService
+                .registrarAfiliacion(
+                  JSON.parse(afiliado.data).id_cliente,
+                  this.plan.id,
+                  this.price
+                )
+                .subscribe((res) => {
+                  console.log(res);
+                });
             });
-        }
-      });
+          }
+
+          if (afiliado.success && hasAfiliados) {
+            this.registrarParientes(afiliado);
+          }
+        });
     }
   }
 
@@ -210,7 +227,21 @@ export class MembershipComponent implements OnInit, AfterViewInit {
         .registrarAfiliado(
           this.getAfiliadoParams(pariente, JSON.parse(res.data).id_cliente)
         )
-        .subscribe((res) => console.log(res));
+        .subscribe((beneficiario) => {
+          this.programsService.registrarReserva().subscribe((reserva) => {
+            console.log(reserva);
+
+            this.programsService
+              .registrarAfiliacion(
+                JSON.parse(beneficiario.data).id_cliente,
+                this.plan.id,
+                this.price
+              )
+              .subscribe((res) => {
+                console.log(res);
+              });
+          });
+        });
     });
   }
 
@@ -225,7 +256,9 @@ export class MembershipComponent implements OnInit, AfterViewInit {
         nombres: new FormControl(""),
         sexo: new FormControl("1"),
         fechaNacimiento: new FormControl(""),
-        correo: new FormControl(""),
+        correo: new FormControl("", [
+          Validators.pattern("^[a-zA-ZñÑÀ-ÿ#.,&@0-9-_ ]*$"),
+        ]),
         telefono: new FormControl(""),
         localidad: new FormControl(""),
         localidadId: new FormControl(""),
