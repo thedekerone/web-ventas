@@ -20,6 +20,7 @@ import { LocalidadResponse } from "../models/home/localidad";
 import { TarifaResponse } from "../models/home/tarifas";
 import { ListaParienteResponse } from "../models/home/pariente";
 import { NacionalidadResponse } from "../models/home/nacionalidad";
+import { AfiliadoProps, AfiliadoResponse } from "../models/home/afiliado";
 
 @Injectable({
   providedIn: "root",
@@ -393,6 +394,112 @@ export class programsService {
 
         responseType: "text" as "json",
       })
+      .pipe(
+        map((res) => {
+          return JSON.parse(
+            this.crypto.decrypt(
+              res.toString(),
+              this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+            )
+          );
+        }),
+        catchError((err: HttpErrorResponse) => {
+          var message = "";
+          if (err.error) {
+            try {
+              var jsonData = JSON.parse(
+                this.crypto.decrypt(
+                  err.error,
+                  this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+                )
+              );
+              // console.log('Data de error recuperada:', jsonData);
+              if (jsonData["message"]) {
+                message = jsonData["message"] as string;
+              }
+            } catch (error) {
+              // console.log('Error al obtener captura de mensaje de error', error);
+            }
+          }
+          throw Error(message);
+        })
+      );
+  }
+  registrarReserva(bp_usuario: number = 60): Observable<UsuarioResponse> {
+    const params = {
+      bp_usuario,
+    };
+    var userRequest = this.crypto.encrypt(
+      JSON.stringify(params),
+      this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+    );
+
+    return this.http
+      .post<UsuarioResponse>(
+        environment.apiUrl + "/search/reserve",
+        userRequest,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "text/plain; charset=utf-8",
+            Authorization:
+              this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2") || "",
+          }),
+
+          responseType: "text" as "json",
+        }
+      )
+      .pipe(
+        map((res) => {
+          return JSON.parse(
+            this.crypto.decrypt(
+              res.toString(),
+              this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+            )
+          );
+        }),
+        catchError((err: HttpErrorResponse) => {
+          var message = "";
+          if (err.error) {
+            try {
+              var jsonData = JSON.parse(
+                this.crypto.decrypt(
+                  err.error,
+                  this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+                )
+              );
+              // console.log('Data de error recuperada:', jsonData);
+              if (jsonData["message"]) {
+                message = jsonData["message"] as string;
+              }
+            } catch (error) {
+              // console.log('Error al obtener captura de mensaje de error', error);
+            }
+          }
+          throw Error(message);
+        })
+      );
+  }
+
+  registrarAfiliado(props: AfiliadoProps): Observable<AfiliadoResponse> {
+    var userRequest = this.crypto.encrypt(
+      JSON.stringify(props),
+      this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+    );
+
+    return this.http
+      .post<AfiliadoResponse>(
+        environment.apiUrl + "/register/affiliate",
+        userRequest,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "text/plain; charset=utf-8",
+            Authorization:
+              this.storage.getCookie("1604e4ec4971ff5ace5fa2a099797ffa2") || "",
+          }),
+
+          responseType: "text" as "json",
+        }
+      )
       .pipe(
         map((res) => {
           return JSON.parse(

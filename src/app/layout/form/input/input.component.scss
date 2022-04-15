@@ -1,0 +1,16 @@
+.input-container{
+    position: relative;
+    
+}
+.eye-icon{
+    position: absolute;
+    right: 1rem;
+    cursor: pointer;
+}
+label{
+    line-height: var(--bs-body-line-height);
+    height: 24px;
+    width: 100%;
+
+}
+

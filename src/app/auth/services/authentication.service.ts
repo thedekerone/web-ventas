@@ -77,6 +77,8 @@ export class AuthenticationService {
             this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
           )
         );
+        console.log(user);
+
         if (user.data && user.data.access_token) {
           const currentUser: User = {
             apellido_materno: user.data.apellido_materno,
@@ -171,5 +173,14 @@ export class AuthenticationService {
 
     // notify
     this.currentUserSubject = new BehaviorSubject({} as User);
+  }
+
+  getUser() {
+    return JSON.parse(
+      this.crypto.decrypt(
+        this.storage.getCookie("zxc21dsrty5uyj11j1"),
+        this.storage.getCookie("1604e4ec4971ff5ace5fa1a099797ffa1")
+      )
+    );
   }
 }

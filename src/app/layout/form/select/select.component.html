@@ -1,0 +1,18 @@
+<label>
+  <span>
+    {{ label }}
+  </span>
+  <select
+    [formControl]="control"
+    class="form-select form-control form-select-md fs-6 mt-1 ps-2"
+    aria-label=".form-select-sm example"
+  >
+    <ng-content></ng-content>
+  </select>
+</label>
+
+<ng-container *ngIf="showMsg()">
+  <div *ngIf="control.getError('required')" class="text-danger" role="alert">
+    Este campo es obligatorio
+  </div>
+</ng-container>

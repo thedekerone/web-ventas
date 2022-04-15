@@ -14,7 +14,12 @@
     <div class="col-12 col-sm-12 col-md-6 mt-3 padding-none">
       <div class="step-wizard">
         <div class="step step-line done">
-          <div [ngClass]="{ 'bg-auna': step == 1, 'step-number': true }">1</div>
+          <div
+            (click)="changeStep(1)"
+            [ngClass]="{ 'bg-auna': step == 1, 'step-number': true }"
+          >
+            1
+          </div>
           <div class="step-name">Identificación</div>
         </div>
         <div class="step">
@@ -84,7 +89,7 @@
             [data]="enterprises"
             [width]="'resolve'"
             (valueChanged)="cambiarEmpresa($event)"
-            [(ngModel)]="enterpriseSelected"
+            [formControl]="afiliado.get('empresa')"
           >
           </ng-select2>
         </div>
@@ -105,12 +110,11 @@
               </ng-select2>
             </div>
             <div class="form-group col-6">
-              <label for="exampleFormControlSelect1">Número</label>
-              <input
-                [formControl]="afiliado.get('documento')"
-                type="text"
-                class="form-control"
-              />
+              <app-input
+                label="Número"
+                m="0*"
+                [control]="afiliado.get('documento')"
+              ></app-input>
             </div>
           </div>
         </div>
@@ -136,12 +140,10 @@
       <div [ngStyle]="{ display: searched ? 'block' : 'none' }">
         <div class="row control-group mt-3">
           <div class="form-group col-6 col-md-3">
-            <label for="exampleFormControlSelect1">Apellido Paterno</label>
-            <input
-              [formControl]="afiliado.get('apellidoPaterno')"
-              type="text"
-              class="form-control"
-            />
+            <app-input
+              label="Apellido Paterno"
+              [control]="afiliado.get('apellidoPaterno')"
+            ></app-input>
           </div>
 
           <div class="form-group col-6 col-md-3">
@@ -149,19 +151,14 @@
               >Apellido Materno
               <span class="optional-text-modifier">(opcional)</span></label
             >
-            <input
-              [formControl]="afiliado.get('apellidoMaterno')"
-              type="text"
-              class="form-control"
-            />
+
+            <app-input [control]="afiliado.get('apellidoMaterno')"></app-input>
           </div>
           <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-            <label for="exampleFormControlSelect1">Nombres</label>
-            <input
-              [formControl]="afiliado.get('nombres')"
-              type="text"
-              class="form-control"
-            />
+            <app-input
+              label="Nombres"
+              [control]="afiliado.get('nombres')"
+            ></app-input>
           </div>
           <div
             class="form-group col-12 col-md-3 d-flex flex-column justify-content-center mt-3"
@@ -205,29 +202,23 @@
             </ng-select2>
           </div>
           <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-            <label for="exampleFormControlSelect1">Fecha de Nacimiento</label>
-            <input
-              [formControl]="afiliado.get('fechaNacimiento')"
+            <app-input
+              label="Fecha de Nacimiento"
               type="date"
-              (change)="changeNacimiento()"
-              class="form-control"
-            />
+              [control]="afiliado.get('fechaNacimiento')"
+            ></app-input>
           </div>
           <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-            <label for="exampleFormControlSelect1">Correo Electronico</label>
-            <input
-              [formControl]="afiliado.get('correo')"
-              type="email"
-              class="form-control"
-            />
+            <app-input
+              label="Correo Electronico"
+              [control]="afiliado.get('correo')"
+            ></app-input>
           </div>
           <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-            <label for="exampleFormControlSelect1">Telefono Celular</label>
-            <input
-              [formControl]="afiliado.get('telefono')"
-              type="tel"
-              class="form-control"
-            />
+            <app-input
+              label="Telefono Celular"
+              [control]="afiliado.get('telefono')"
+            ></app-input>
           </div>
         </div>
         <div class="row control-group mt-3">
@@ -250,14 +241,10 @@
           </div>
 
           <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
-            <div>
-              <label>Direccion</label>
-            </div>
-            <input
-              [formControl]="afiliado.get('direccion')"
-              type="text"
-              class="form-control"
-            />
+            <app-input
+              label="Direccion"
+              [control]="afiliado.get('direccion')"
+            ></app-input>
           </div>
         </div>
         <div class="row control-group mt-3">
@@ -309,7 +296,7 @@
                   id="inlineRadio1"
                   value="1"
                 />
-                <label class="form-check-label" for="inlineRadio1">Si</label>
+                <label class="form-check-label" for="inlineRadio1">No</label>
               </div>
               <div class="form-check form-check-inline">
                 <input
@@ -320,7 +307,7 @@
                   id="inlineRadio2"
                   value="2"
                 />
-                <label class="form-check-label" for="inlineRadio2">No</label>
+                <label class="form-check-label" for="inlineRadio2">Si</label>
               </div>
             </div>
 
@@ -524,22 +511,18 @@
         </ng-select2>
       </div>
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-        <label for="exampleFormControlSelect1">Numero</label>
-        <input
-          [formControl]="pariente.get('documento')"
-          type="tel"
-          class="form-control"
-        />
+        <app-input
+          label="Número"
+          [control]="pariente.get('documento')"
+        ></app-input>
       </div>
     </div>
     <div class="row control-group mt-3">
       <div class="form-group col-6 col-md-3">
-        <label
-          [formControl]="pariente.get('apellidoPaterno')"
-          for="exampleFormControlSelect1"
-          >Apellido Paterno</label
-        >
-        <input type="text" class="form-control" />
+        <app-input
+          label="Apellido Paterno"
+          [control]="pariente.get('apellidoPaterno')"
+        ></app-input>
       </div>
 
       <div class="form-group col-6 col-md-3">
@@ -547,19 +530,13 @@
           >Apellido Materno
           <span class="optional-text-modifier">(opcional)</span></label
         >
-        <input
-          [formControl]="pariente.get('apellidoMaterno')"
-          type="text"
-          class="form-control"
-        />
+        <app-input [control]="pariente.get('apellidoMaterno')"></app-input>
       </div>
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-        <label for="exampleFormControlSelect1">Nombres</label>
-        <input
-          [formControl]="pariente.get('nombres')"
-          type="text"
-          class="form-control"
-        />
+        <app-input
+          label="Nombres"
+          [control]="pariente.get('nombres')"
+        ></app-input>
       </div>
       <div
         class="form-group col-12 col-md-3 d-flex flex-column justify-content-center mt-3"
@@ -593,29 +570,23 @@
     </div>
     <div class="row control-group mt-3">
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-        <label for="exampleFormControlSelect1">Fecha de Nacimiento</label>
-        <input
-          [formControl]="pariente.get('fechaNacimiento')"
-          (change)="changeNacimiento()"
+        <app-input
+          label="Fecha de Nacimiento"
           type="date"
-          class="form-control"
-        />
+          [control]="pariente.get('fechaNacimiento')"
+        ></app-input>
       </div>
       <div class="form-group col-12 col-md-6 mt-3 mt-md-0">
-        <label for="exampleFormControlSelect1">Correo Electronico</label>
-        <input
-          [formControl]="pariente.get('correo')"
-          type="email"
-          class="form-control"
-        />
+        <app-input
+          label="Correo Electronico"
+          [control]="pariente.get('correo')"
+        ></app-input>
       </div>
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
-        <label for="exampleFormControlSelect1">Telefono Celular</label>
-        <input
-          [formControl]="pariente.get('telefono')"
-          type="tel"
-          class="form-control"
-        />
+        <app-input
+          label="Telefono Celular"
+          [control]="pariente.get('telefono')"
+        ></app-input>
       </div>
     </div>
     <div class="row control-group mt-3">
@@ -637,14 +608,10 @@
         ></app-select-localidades>
       </div>
       <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
-        <div>
-          <label>Direccion</label>
-        </div>
-        <input
-          [formControl]="pariente.get('direccion')"
-          type="text"
-          class="form-control"
-        />
+        <app-input
+          label="Direccion"
+          [control]="pariente.get('direccion')"
+        ></app-input>
       </div>
     </div>
     <div class="row control-group mt-3">
@@ -723,7 +690,7 @@
       <input
         class="form-check-input"
         type="checkbox"
-        [(ngModel)]="additionalPurposes"
+        [(ngModel)]="acceptPolicies2"
         name="additionalPurposes"
       />
       <label class="form-check-label" for="flexCheckChecked">
@@ -741,7 +708,7 @@
       class="col-12 col-sm-12 col-md-3 d-flex justify-content-center align-items-center"
     >
       <button
-        (click)="changeStep(2)"
+        (click)="continuar(true)"
         class="btn btn-primary btn-lg"
         type="button"
       >

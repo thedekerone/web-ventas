@@ -21,6 +21,7 @@ import {
 } from "src/app/models/home/empresa";
 import { TarifaResponseData } from "src/app/models/home/tarifas";
 import { ListaParienteResponseData } from "src/app/models/home/pariente";
+import { AfiliadoProps, AfiliadoResponse } from "src/app/models/home/afiliado";
 @Component({
   selector: "app-membership",
   templateUrl: "./membership.component.html",
@@ -52,7 +53,6 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   public documentSelected: string;
   //Public - Select2 Enterprise
   public enterprises: Array<Select2OptionData>;
-  public enterpriseSelected: string;
   localidadesOpen = false;
   parienteLocalidad = {};
   planes: Plan[];
@@ -91,9 +91,9 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     this.acceptPolicies = true;
     this.additionalPurposes = false;
     this.documentSelected = "";
-    this.enterpriseSelected = "";
 
     this.afiliado = new FormGroup({
+      empresa: new FormControl("", [Validators.required]),
       documento: new FormControl("", [Validators.required]),
       tipoDocumento: new FormControl("1"),
       apellidoPaterno: new FormControl("", [Validators.required]),
@@ -151,11 +151,67 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       });
   }
 
-  continuar() {
+  getAfiliadoParams(
+    afiliado: any,
+    id_cliente_principal: number = 0
+  ): AfiliadoProps {
+    return {
+      apellido_materno: afiliado.get("apellidoMaterno").value,
+      apellido_paterno: afiliado.get("apellidoPaterno").value,
+      condicion_fumador: afiliado.get("estadoFumador").value,
+      correo: afiliado.get("correo").value,
+      direccion: afiliado.get("direccion").value,
+      enfermedad_oncologica: afiliado.get("estadoEnfermedadOncologica").value,
+      estado_civil: afiliado.get("estadoCivil")?.value ?? "CASADO",
+      fecha_nacimiento: afiliado.get("fechaNacimiento").value,
+      fines_adicionales: 1,
+      id_cliente_principal: id_cliente_principal,
+      id_nacionalidad: afiliado.get("nacionalidad").value,
+      id_parentesco: afiliado.get("parentesco")?.value ?? 0,
+      localidad: afiliado.get("localidad").value,
+      nombres: afiliado.get("nombres").value,
+      nro_documento: afiliado.get("documento").value,
+      politicas_privacidad: this.acceptPolicies ? 1 : 0,
+      sexo: afiliado.get("sexo").value,
+      telefono: afiliado.get("telefono").value,
+      terminos_condiciones: this.acceptPolicies2 ? 1 : 0,
+      tipo_documento: afiliado.get("tipoDocumento").value,
+    };
+  }
+
+  continuar(hasAfiliados = false) {
+    console.log("Dasds");
     if (this.afiliado.invalid) return;
-    if (this.afiliado.get("estadoAfiliar").value == 1) {
+    console.log("Dasds");
+    if (this.afiliado.get("estadoAfiliar").value == 1 && !hasAfiliados) {
       this.changeStep(2);
+    } else {
+      console.log("Dasds2");
+      if (!this.acceptPolicies2) return;
+      console.log("Dasds3");
+      this.programsService.registrarReserva().subscribe((res) => {
+        if (res.success) {
+          this.programsService
+            .registrarAfiliado(this.getAfiliadoParams(this.afiliado))
+            .subscribe((res) => {
+              console.log(res);
+              if (res.success && hasAfiliados) {
+                this.registrarParientes(res);
+              }
+            });
+        }
+      });
     }
+  }
+
+  registrarParientes(res: AfiliadoResponse) {
+    this.parientes.controls.map((pariente: any) => {
+      this.programsService
+        .registrarAfiliado(
+          this.getAfiliadoParams(pariente, JSON.parse(res.data).id_cliente)
+        )
+        .subscribe((res) => console.log(res));
+    });
   }
 
   addPariente() {
