@@ -112,7 +112,7 @@
             <div class="form-group col-6">
               <app-input
                 label="Número"
-                m="0*"
+                [m]="getDocumentMask(afiliado.get('tipoDocumento').value)"
                 [control]="afiliado.get('documento')"
               ></app-input>
             </div>
@@ -216,6 +216,7 @@
           </div>
           <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
             <app-input
+              m="000000000"
               label="Telefono Celular"
               [control]="afiliado.get('telefono')"
             ></app-input>
@@ -240,7 +241,7 @@
             ></app-select-localidades>
           </div>
 
-          <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-0">
+          <div class="form-group col-12 col-sm-12 col-md-6 mt-3 mt-md-3">
             <app-input
               label="Direccion"
               [control]="afiliado.get('direccion')"
@@ -315,7 +316,8 @@
               *ngIf="afiliado.get('estadoEnfermedadOncologica').value == 2"
               class="text-danger"
             >
-              Mensaje de error
+              ¡Lo sentimos! Las personas con antecedentes oncológicos no pueden
+              iniciar una afiliación por medio de esta plataforma
             </p>
           </div>
         </div>
@@ -513,7 +515,7 @@
       <div class="form-group col-12 col-md-3 mt-3 mt-md-0">
         <app-input
           label="Número"
-          m="0*"
+          [m]="getDocumentMask(pariente.get('tipoDocumento').value)"
           type="text"
           [control]="pariente.get('documento')"
         ></app-input>
@@ -681,6 +683,13 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h4 style="padding-left: 0; color: #646464">
+        Hola, {{ getNombreUsuario() }}! Por favor, ingresa tus beneficiarios
+      </h4>
     </div>
   </div>
   <div class="row control-group mt-3 col-6 col-md-6 col-lg-3">

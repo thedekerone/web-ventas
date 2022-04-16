@@ -22,6 +22,7 @@ import {
 import { TarifaResponseData } from "src/app/models/home/tarifas";
 import { ListaParienteResponseData } from "src/app/models/home/pariente";
 import { AfiliadoProps, AfiliadoResponse } from "src/app/models/home/afiliado";
+import { AuthenticationService } from "src/app/auth/services/authentication.service";
 @Component({
   selector: "app-membership",
   templateUrl: "./membership.component.html",
@@ -74,6 +75,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   nacionalidades: { id: string; text: string }[] = [];
   constructor(
     private storage: StorageService,
+    private user: AuthenticationService,
     private crypto: SharedService,
     private programsService: programsService,
     private route: ActivatedRoute,
@@ -88,7 +90,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
         )
       : [];
 
-    this.acceptPolicies = true;
+    this.acceptPolicies = false;
     this.additionalPurposes = false;
     this.documentSelected = "";
 
@@ -104,6 +106,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       fechaNacimiento: new FormControl("", [Validators.required]),
       correo: new FormControl("", [
         Validators.required,
+        Validators.email,
         Validators.pattern("^[a-zA-ZñÑÀ-ÿ#.,&@0-9-_ ]*$"),
       ]),
       telefono: new FormControl("", [Validators.required]),
@@ -132,6 +135,22 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     this.enterprises = [];
   }
 
+  getDocumentMask(type: number) {
+    if (type == 1) {
+      return "00000000";
+    } else if (type == 2) {
+      return "000000000";
+    } else if (type == 3) {
+      return "00000000000";
+    } else {
+      return "0*";
+    }
+  }
+
+  getNombreUsuario() {
+    return this.user.currentUserValue.nombre;
+  }
+
   cambiarEmpresa(value: string | string[]) {
     const selected = this.listaEmpresas.find(
       (el) => el.id_empresa == Number(value)
@@ -142,7 +161,7 @@ export class MembershipComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res.success) {
           this.listaTarifas = res.data;
-
+          console.log(this.listaTarifas);
           if (this.afiliado.get("fechaNacimiento").value) {
             this.price =
               this.getPrice(
@@ -246,6 +265,11 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   }
 
   addPariente() {
+    const nacimiento = new FormControl("");
+
+    nacimiento.valueChanges.subscribe((res: any) => {
+      this.changeNacimiento();
+    });
     this.parientes.push(
       new FormGroup({
         parentesco: new FormControl("1"),
@@ -255,8 +279,10 @@ export class MembershipComponent implements OnInit, AfterViewInit {
         apellidoMaterno: new FormControl(""),
         nombres: new FormControl(""),
         sexo: new FormControl("1"),
-        fechaNacimiento: new FormControl(""),
+        fechaNacimiento: nacimiento,
         correo: new FormControl("", [
+          Validators.required,
+          Validators.email,
           Validators.pattern("^[a-zA-ZñÑÀ-ÿ#.,&@0-9-_ ]*$"),
         ]),
         telefono: new FormControl(""),
@@ -271,15 +297,17 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   }
 
   removePariente(index: number) {
-    this.parientes.removeAt(index);
-    if (!this.parientes.controls[index].get("fechaNacimiento")) return;
-    const newPrice = this.getPrice(
-      this.listaTarifas,
-      this.parientes.controls[index].get("fechaNacimiento").value
-    );
-    if (newPrice) {
-      this.price -= newPrice;
+    console.log(this.parientes.controls);
+    if (this.parientes.controls[index].get("fechaNacimiento")) {
+      const newPrice = this.getPrice(
+        this.listaTarifas,
+        this.parientes.controls[index].get("fechaNacimiento").value
+      );
+      if (newPrice) {
+        this.price -= newPrice;
+      }
     }
+    this.parientes.removeAt(index);
   }
 
   getDecimal(value: number) {
@@ -314,6 +342,11 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.afiliado.get("fechaNacimiento").valueChanges.subscribe((res: any) => {
+      console.log(res);
+      this.changeNacimiento();
+    });
+
     this.programsService.getNacionalidades().subscribe((res) => {
       console.log(res);
       this.nacionalidades = res.data.map((nacionalidad) => ({
@@ -355,6 +388,8 @@ export class MembershipComponent implements OnInit, AfterViewInit {
   }
 
   changeNacimiento() {
+    console.log("dadaas");
+    console.log(this.afiliado.get("fechaNacimiento").value);
     if (
       this.afiliado.get("fechaNacimiento").value &&
       this.listaTarifas.length > 0
@@ -368,10 +403,8 @@ export class MembershipComponent implements OnInit, AfterViewInit {
     this.parientes.controls.map((el: any) => {
       if (el.get("fechaNacimiento").value && this.listaTarifas.length > 0) {
         this.price +=
-          this.getPrice(
-            this.listaTarifas,
-            this.afiliado.get("fechaNacimiento").value
-          ) || 0;
+          this.getPrice(this.listaTarifas, el.get("fechaNacimiento").value) ||
+          0;
       }
     });
   }
@@ -502,7 +535,9 @@ export class MembershipComponent implements OnInit, AfterViewInit {
             this.afiliado
               .get("fechaNacimiento")
               .setValue(
-                res.data.fecha_nacimiento.split("/").reverse().join("-")
+                new Date(
+                  res.data.fecha_nacimiento.split("/").reverse().join("-")
+                )
               );
 
             if (this.afiliado.get("fechaNacimiento").value) {
